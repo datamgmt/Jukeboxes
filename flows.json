@@ -11,16 +11,21 @@
         "id": "4e1ac35093255c6e",
         "type": "inject",
         "z": "c8fe70a7b946a093",
-        "name": "Selection",
+        "name": "Single",
         "props": [
+            {
+                "p": "model",
+                "v": "",
+                "vt": "str"
+            },
             {
                 "p": "selection",
                 "v": "182",
                 "vt": "str"
             },
             {
-                "p": "model",
-                "v": "459-100",
+                "p": "mode",
+                "v": "single",
                 "vt": "str"
             }
         ],
@@ -29,107 +34,33 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 180,
-        "y": 180,
+        "x": 110,
+        "y": 100,
         "wires": [
             [
-                "145f6ca4ba89752c",
-                "efce654434ee0b0e"
+                "6414e28ebba71050"
             ]
         ]
-    },
-    {
-        "id": "145f6ca4ba89752c",
-        "type": "function",
-        "z": "c8fe70a7b946a093",
-        "name": "get_jukeboxData",
-        "func": "msg.jukeboxData = {\n    \"AMI\": {\n        \"models\": {}\n    },\n    \"Rock-Ola\": {\n        \"models\": {\n            \"459-100\": {\n                \"action\": \"flash-on\",\n                \"delay\": 2,\n                \"selection\": {\n                    \"1\": {\n                        \"1\": {\n                            \"device\": 1,\n                            \"relay\": 1\n                        },\n                        \"2\": {\n                            \"device\": 1,\n                            \"relay\": 2\n                        }\n                    },\n                    \"2\": {\n                        \"0\": {\n                            \"device\": 1,\n                            \"relay\": 10\n                        },\n                        \"1\": {\n                            \"device\": 1,\n                            \"relay\": 11\n                        },\n                        \"2\": {\n                            \"device\": 1,\n                            \"relay\": 12\n                        },\n                        \"3\": {\n                            \"device\": 1,\n                            \"relay\": 13\n                        },\n                        \"4\": {\n                            \"device\": 1,\n                            \"relay\": 14\n                        },\n                        \"5\": {\n                            \"device\": 1,\n                            \"relay\": 15\n                        },\n                        \"6\": {\n                            \"device\": 1,\n                            \"relay\": 16\n                        },\n                        \"7\": {\n                            \"device\": 1,\n                            \"relay\": 17\n                        },\n                        \"8\": {\n                            \"device\": 1,\n                            \"relay\": 18\n                        },\n                        \"9\": {\n                            \"device\": 1,\n                            \"relay\": 19\n                        }\n                    },\n                    \"3\": {\n                        \"0\": {\n                            \"device\": 1,\n                            \"relay\": 20\n                        },\n                        \"1\": {\n                            \"device\": 1,\n                            \"relay\": 21\n                        },\n                        \"2\": {\n                            \"device\": 1,\n                            \"relay\": 22\n                        },\n                        \"3\": {\n                            \"device\": 1,\n                            \"relay\": 23\n                        },\n                        \"4\": {\n                            \"device\": 1,\n                            \"relay\": 24\n                        }\n                    }\n                }\n            }\n        }\n    },\n    \"Seeburg\": {\n        \"models\": {}\n    },\n    \"Wurlitzer\": {\n        \"models\": {}\n    }\n};\n\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 410,
-        "y": 180,
-        "wires": [
-            [
-                "d1e495f2c7d82c73",
-                "2bc0b6d6993d8060"
-            ]
-        ]
-    },
-    {
-        "id": "efce654434ee0b0e",
-        "type": "debug",
-        "z": "c8fe70a7b946a093",
-        "name": "Show selection",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "selection",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 400,
-        "y": 240,
-        "wires": []
     },
     {
         "id": "2bc0b6d6993d8060",
         "type": "function",
         "z": "c8fe70a7b946a093",
         "name": "get_buttons",
-        "func": "try {\n    // Extract inputs from msg\n    const jukeboxModel = msg.model;\n    const sequence = msg.selection;\n    const jukeboxData = msg.jukeboxData;\n\n    // Validate required inputs\n    if (!jukeboxModel) {\n        msg.buttons = {\n            success: false,\n            error: \"msg.model is required\"\n        };\n        return msg;\n    }\n\n    if (!sequence) {\n        msg.buttons = {\n            success: false,\n            error: \"msg.selection is required\"\n        };\n        return msg;\n    }\n\n    if (!jukeboxData) {\n        msg.buttons = {\n            success: false,\n            error: \"msg.jukeboxData is required\"\n        };\n        return msg;\n    }\n\n    // Find the jukebox brand and model\n    let model = null;\n    let brand = null;\n\n    for (const [brandName, brandData] of Object.entries(jukeboxData)) {\n        if (brandData.models[jukeboxModel]) {\n            brand = brandName;\n            model = brandData.models[jukeboxModel];\n            break;\n        }\n    }\n\n    // Check if model exists\n    if (!model) {\n        msg.buttons = {\n            success: false,\n            error: `Model ${jukeboxModel} not found`\n        };\n        return msg;\n    }\n\n    // Get the selection structure\n    const selection = model.selection;\n    const selectionLevels = Object.keys(selection).length;\n\n    // Validate sequence length matches selection levels\n    if (sequence.length !== selectionLevels) {\n        msg.buttons = {\n            success: false,\n            error: `Invalid sequence length. Expected ${selectionLevels} digits, got ${sequence.length}`\n        };\n        return msg;\n    }\n\n    // Validate that all characters exist in their respective selection levels\n    for (let i = 0; i < sequence.length; i++) {\n        const levelKey = String(i + 1);\n        const charValue = sequence[i];\n\n        if (!selection[levelKey] || !selection[levelKey][charValue]) {\n            msg.buttons = {\n                success: false,\n                error: `Invalid character '${charValue}' at position ${i + 1}. Valid options at level ${levelKey}: ${Object.keys(selection[levelKey]).join(\", \")}`\n            };\n            return msg;\n        }\n    }\n\n    // Extract device and relay information\n    const results = [];\n\n    for (let i = 0; i < sequence.length; i++) {\n        const levelKey = String(i + 1);\n        const charValue = sequence[i];\n\n        const selectionData = selection[levelKey][charValue];\n        results.push({\n            level: levelKey,\n            digit: charValue,\n            device: selectionData.device,\n            relay: selectionData.relay\n        });\n    }\n\n    // Return successful result\n    msg.buttons = {\n        success: true,\n        brand: brand,\n        model: jukeboxModel,\n        sequence: sequence,\n        action: model.action,\n        delay: model.delay,\n        results: results\n    };\n\n    return msg;\n\n} catch (error) {\n    msg.buttons = {\n        success: false,\n        error: `An error occurred: ${error.message}`\n    };\n    return msg;\n}",
+        "func": "try {\n    // Extract inputs from msg\n    const jukeboxModel = msg.model;\n    const sequence = msg.selection;\n    const jukeboxData = global.get('jukeboxData');\n\n    // Validate required inputs\n    if (!jukeboxModel) {\n        msg.buttons = {\n            success: false,\n            error: \"msg.model is required\"\n        };\n        return msg;\n    }\n\n    if (!sequence) {\n        msg.buttons = {\n            success: false,\n            error: \"msg.selection is required\"\n        };\n        return msg;\n    }\n\n    if (!jukeboxData) {\n        msg.buttons = {\n            success: false,\n            error: \"global.jukeboxData is required\"\n        };\n        return msg;\n    }\n\n    // Find the jukebox brand and model\n    let model = null;\n    let brand = null;\n\n    for (const [brandName, brandData] of Object.entries(jukeboxData)) {\n        if (brandData.models[jukeboxModel]) {\n            brand = brandName;\n            model = brandData.models[jukeboxModel];\n            break;\n        }\n    }\n\n    // Check if model exists\n    if (!model) {\n        msg.buttons = {\n            success: false,\n            error: `Model ${jukeboxModel} not found`\n        };\n        return msg;\n    }\n\n    // Get the selection structure\n    const selection = model.selection;\n    const selectionLevels = Object.keys(selection).length;\n\n    // Validate sequence length matches selection levels\n    if (sequence.length !== selectionLevels) {\n        msg.buttons = {\n            success: false,\n            error: `Invalid sequence length. Expected ${selectionLevels} digits, got ${sequence.length}`\n        };\n        return msg;\n    }\n\n    // Validate that all characters exist in their respective selection levels\n    for (let i = 0; i < sequence.length; i++) {\n        const levelKey = String(i + 1);\n        const charValue = sequence[i];\n\n        if (!selection[levelKey] || !selection[levelKey][charValue]) {\n            msg.buttons = {\n                success: false,\n                error: `Invalid character '${charValue}' at position ${i + 1}. Valid options at level ${levelKey}: ${Object.keys(selection[levelKey]).join(\", \")}`\n            };\n            return msg;\n        }\n    }\n\n    // Extract device and relay information\n    const results = [];\n\n    for (let i = 0; i < sequence.length; i++) {\n        const levelKey = String(i + 1);\n        const charValue = sequence[i];\n\n        const selectionData = selection[levelKey][charValue];\n        results.push({\n            level: levelKey,\n            digit: charValue,\n            device: selectionData.device,\n            relay: selectionData.relay\n        });\n    }\n\n    // Return successful result\n    msg.buttons = {\n        success: true,\n        brand: brand,\n        model: jukeboxModel,\n        sequence: sequence,\n        action: model.action,\n        delay: model.delay,\n        results: results\n    };\n\n    return msg;\n\n} catch (error) {\n    msg.buttons = {\n        success: false,\n        error: `An error occurred: ${error.message}`\n    };\n    return msg;\n}",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 670,
-        "y": 180,
+        "x": 650,
+        "y": 400,
         "wires": [
             [
-                "12f6956628c8d00f",
                 "22635c0b62a654f5"
             ]
         ]
-    },
-    {
-        "id": "d1e495f2c7d82c73",
-        "type": "debug",
-        "z": "c8fe70a7b946a093",
-        "name": "show jukeboxData",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "jukeboxData",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 690,
-        "y": 240,
-        "wires": []
-    },
-    {
-        "id": "12f6956628c8d00f",
-        "type": "debug",
-        "z": "c8fe70a7b946a093",
-        "name": "show_buttons",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "buttons",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 940,
-        "y": 240,
-        "wires": []
     },
     {
         "id": "22635c0b62a654f5",
@@ -143,29 +74,612 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 920,
-        "y": 180,
+        "x": 900,
+        "y": 400,
         "wires": [
             [
-                "44a09d5b3e57f394"
+                "fdcf6fff3d42db3e"
             ]
         ]
     },
     {
-        "id": "44a09d5b3e57f394",
+        "id": "487c49f5a2355bab",
+        "type": "switch",
+        "z": "c8fe70a7b946a093",
+        "name": "Select Mode",
+        "property": "mode",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "single",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "sequential",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "random",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "playlist",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 4,
+        "x": 390,
+        "y": 420,
+        "wires": [
+            [
+                "2bc0b6d6993d8060"
+            ],
+            [
+                "8dbd770eab9821ee"
+            ],
+            [
+                "973200f73e90c3cc"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "a375f5b40bd5267b",
+        "type": "inject",
+        "z": "c8fe70a7b946a093",
+        "name": "Sequential",
+        "props": [
+            {
+                "p": "model",
+                "v": "",
+                "vt": "str"
+            },
+            {
+                "p": "mode",
+                "v": "sequential",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 120,
+        "y": 140,
+        "wires": [
+            [
+                "55091995478ea561"
+            ]
+        ]
+    },
+    {
+        "id": "8dbd770eab9821ee",
+        "type": "function",
+        "z": "c8fe70a7b946a093",
+        "name": "Sequential Generator",
+        "func": "try {\n\n    // Validate msg.model exists\n    if (!msg.model) {\n        msg.permutations = {\n            success: false,\n            error: \"msg.model is required\"\n        };\n        return msg;\n    }\n\n    const jukeboxData = global.get('jukeboxData');\n    const targetModel = msg.model;\n    const permutations = {};\n    let modelData = null;\n    let brandName = null;\n\n    // Find the specified model\n    for (const [brand, brandData] of Object.entries(jukeboxData)) {\n        if (brandData.models && brandData.models[targetModel]) {\n            brandName = brand;\n            modelData = brandData.models[targetModel];\n            break;\n        }\n    }\n\n    // Check if model exists\n    if (!modelData) {\n        msg.permutations = {\n            success: false,\n            error: `Model ${targetModel} not found`\n        };\n        return msg;\n    }\n\n    if (!modelData.selection) {\n        msg.permutations = {\n            success: false,\n            error: `Model ${targetModel} has no selection data`\n        };\n        return msg;\n    }\n\n    const selection = modelData.selection;\n    const levels = Object.keys(selection).sort((a, b) => Number(a) - Number(b));\n\n    if (levels.length === 0) {\n        msg.permutations = {\n            success: false,\n            error: `Model ${targetModel} has no selection levels`\n        };\n        return msg;\n    }\n\n    // Get valid options for each level\n    const levelOptions = [];\n    for (const level of levels) {\n        const options = Object.keys(selection[level]).sort();\n        levelOptions.push(options);\n    }\n\n    // Generate all valid permutations for this model\n    const modelSequences = [];\n\n    // Recursive function to generate all combinations\n    function generateCombinations(index, current) {\n        if (index === levelOptions.length) {\n            modelSequences.push(current);\n            return;\n        }\n\n        for (const option of levelOptions[index]) {\n            generateCombinations(index + 1, current + option);\n        }\n    }\n\n    generateCombinations(0, \"\");\n\n    // Build result structure\n    permutations[brandName] = {};\n    permutations[brandName][targetModel] = {\n        count: modelSequences.length\n    };\n\n    // Return results\n    msg.permutations = {\n        success: true,\n        data: permutations\n    };\n\n    msg.playlist = modelSequences;\n\n    return msg;\n\n} catch (error) {\n    msg.permutations = {\n        success: false,\n        error: `An error occurred: ${error.message}`\n    };\n    return msg;\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 680,
+        "y": 460,
+        "wires": [
+            [
+                "16358cc7d829ca19"
+            ]
+        ]
+    },
+    {
+        "id": "16358cc7d829ca19",
+        "type": "split",
+        "z": "c8fe70a7b946a093",
+        "name": "Split Playlist",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "property": "playlist",
+        "x": 910,
+        "y": 460,
+        "wires": [
+            [
+                "4ecd9669724b9ee2"
+            ]
+        ]
+    },
+    {
+        "id": "4ecd9669724b9ee2",
+        "type": "function",
+        "z": "c8fe70a7b946a093",
+        "name": "Re-format Data",
+        "func": "msg.selection=msg.playlist\nmsg.mode = \"single\"\ndelete msg.permutations \ndelete msg.playlist \ndelete msg.parts \nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1100,
+        "y": 460,
+        "wires": [
+            [
+                "816b44b87d8fbb7c",
+                "2a3df256abf2d178"
+            ]
+        ]
+    },
+    {
+        "id": "fdcf6fff3d42db3e",
+        "type": "delay",
+        "z": "c8fe70a7b946a093",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "10",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": true,
+        "outputs": 1,
+        "x": 1100,
+        "y": 400,
+        "wires": [
+            [
+                "2a3df256abf2d178"
+            ]
+        ]
+    },
+    {
+        "id": "973200f73e90c3cc",
+        "type": "function",
+        "z": "c8fe70a7b946a093",
+        "name": "Random Generator",
+        "func": "try {\n    \n    // Validate msg.model exists\n    if (!msg.model) {\n        msg.permutations = {\n            success: false,\n            error: \"msg.model is required\"\n        };\n        return msg;\n    }\n\n    const jukeboxData = global.get('jukeboxData');\n    const targetModel = msg.model;\n    const permutations = {};\n    let modelData = null;\n    let brandName = null;\n\n    // Find the specified model\n    for (const [brand, brandData] of Object.entries(jukeboxData)) {\n        if (brandData.models && brandData.models[targetModel]) {\n            brandName = brand;\n            modelData = brandData.models[targetModel];\n            break;\n        }\n    }\n\n    // Check if model exists\n    if (!modelData) {\n        msg.permutations = {\n            success: false,\n            error: `Model ${targetModel} not found`\n        };\n        return msg;\n    }\n\n    if (!modelData.selection) {\n        msg.permutations = {\n            success: false,\n            error: `Model ${targetModel} has no selection data`\n        };\n        return msg;\n    }\n\n    const selection = modelData.selection;\n    const levels = Object.keys(selection).sort((a, b) => Number(a) - Number(b));\n\n    if (levels.length === 0) {\n        msg.permutations = {\n            success: false,\n            error: `Model ${targetModel} has no selection levels`\n        };\n        return msg;\n    }\n\n    // Get valid options for each level\n    const levelOptions = [];\n    for (const level of levels) {\n        const options = Object.keys(selection[level]).sort();\n        levelOptions.push(options);\n    }\n\n    // Generate all valid permutations for this model\n    const modelSequences = [];\n\n    // Recursive function to generate all combinations\n    function generateCombinations(index, current) {\n        if (index === levelOptions.length) {\n            modelSequences.push(current);\n            return;\n        }\n\n        for (const option of levelOptions[index]) {\n            generateCombinations(index + 1, current + option);\n        }\n    }\n\n    generateCombinations(0, \"\");\n\n    // Fisher-Yates shuffle algorithm to randomize the array\n    function shuffleArray(array) {\n        const shuffled = [...array]; // Create a copy\n        for (let i = shuffled.length - 1; i > 0; i--) {\n            const j = Math.floor(Math.random() * (i + 1));\n            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];\n        }\n        return shuffled;\n    }\n\n    // Randomize the sequences\n    const randomizedSequences = shuffleArray(modelSequences);\n\n    // Build result structure\n    permutations[brandName] = {};\n    permutations[brandName][targetModel] = {\n        count: randomizedSequences.length\n    };\n\n    // Return results\n    msg.permutations = {\n        success: true,\n        data: permutations\n    };\n\n    msg.playlist = randomizedSequences;\n\n    return msg;\n\n} catch (error) {\n    msg.permutations = {\n        success: false,\n        error: `An error occurred: ${error.message}`\n    };\n    return msg;\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 520,
+        "wires": [
+            [
+                "16358cc7d829ca19"
+            ]
+        ]
+    },
+    {
+        "id": "b27b6b585e6a1f1a",
+        "type": "inject",
+        "z": "c8fe70a7b946a093",
+        "name": "Random",
+        "props": [
+            {
+                "p": "model",
+                "v": "",
+                "vt": "str"
+            },
+            {
+                "p": "mode",
+                "v": "random",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 120,
+        "y": 180,
+        "wires": [
+            [
+                "600884ef3fc39f5a"
+            ]
+        ]
+    },
+    {
+        "id": "f5bb88be4e43a428",
+        "type": "file in",
+        "z": "c8fe70a7b946a093",
+        "name": "Read File",
+        "filename": "filePath",
+        "filenameType": "msg",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "utf8",
+        "allProps": false,
+        "x": 660,
+        "y": 300,
+        "wires": [
+            [
+                "c8a0dc1d0756b85c"
+            ]
+        ]
+    },
+    {
+        "id": "c8a0dc1d0756b85c",
+        "type": "json",
+        "z": "c8fe70a7b946a093",
+        "name": "Convert File Contents To JSON",
+        "property": "payload",
+        "action": "",
+        "pretty": true,
+        "x": 890,
+        "y": 300,
+        "wires": [
+            [
+                "7d8a47356596ed4f"
+            ]
+        ]
+    },
+    {
+        "id": "7d8a47356596ed4f",
+        "type": "function",
+        "z": "c8fe70a7b946a093",
+        "name": "Create Global Object",
+        "func": "try {\n    // Validate inputs\n    if (!msg.payload) {\n        msg.fileLoader = {\n            success: false,\n            error: \"msg.payload is required\"\n        };\n        return msg;\n    }\n\n    const cacheKey = msg.globalKey;\n    let data = msg.payload;\n\n    // If payload is a string, parse it as JSON\n    if (typeof data === 'string') {\n        try {\n            data = JSON.parse(data);\n        } catch (err) {\n            msg.fileLoader = {\n                success: false,\n                error: `Invalid JSON in payload: ${err.message}`\n            };\n            return msg;\n        }\n    }\n\n    // Validate data is an object\n    if (typeof data !== 'object' || data === null) {\n        msg.fileLoader = {\n            success: false,\n            error: \"Payload must be a valid JSON object\"\n        };\n        return msg;\n    }\n\n    // Store in global context (accessible everywhere in Node-RED)\n    global.set(cacheKey, data);\n\n    // Return success message\n    msg.fileLoader = {\n        success: true,\n        message: `Successfully stored data in global context`,\n        cacheKey: cacheKey,\n        dataKeys: Object.keys(data),\n        dataType: typeof data,\n        timestamp: new Date().toISOString()\n    };\n\n    return msg;\n\n} catch (error) {\n    msg.fileLoader = {\n        success: false,\n        error: `An unexpected error occurred: ${error.message}`\n    };\n    return msg;\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1140,
+        "y": 300,
+        "wires": [
+            [
+                "56842ddf18c41bb5"
+            ]
+        ]
+    },
+    {
+        "id": "481c1faa2dbb2fd9",
+        "type": "inject",
+        "z": "c8fe70a7b946a093",
+        "name": "Playlist",
+        "props": [
+            {
+                "p": "model",
+                "v": "",
+                "vt": "str"
+            },
+            {
+                "p": "mode",
+                "v": "playlist",
+                "vt": "str"
+            },
+            {
+                "p": "playlist",
+                "v": "",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 110,
+        "y": 220,
+        "wires": [
+            [
+                "7a2bdb26d2a37fb6"
+            ]
+        ]
+    },
+    {
+        "id": "003a83a6f1516bcf",
+        "type": "inject",
+        "z": "c8fe70a7b946a093",
+        "name": "Request Configs",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 420,
+        "y": 100,
+        "wires": [
+            [
+                "399f055406ac68ae"
+            ]
+        ]
+    },
+    {
+        "id": "399f055406ac68ae",
+        "type": "function",
+        "z": "c8fe70a7b946a093",
+        "name": "Load Configs",
+        "func": "msg.jukeboxData = global.get('jukeboxData');\nmsg.jukeboxCatalog = global.get('jukeboxCatalog');\nmsg.jukeboxConfig = global.get('jukeboxConfig');\nmsg.jukeboxPlaylists = global.get('jukeboxPlaylists');\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 620,
+        "y": 100,
+        "wires": [
+            [
+                "9502699f0f7872d4"
+            ]
+        ]
+    },
+    {
+        "id": "9502699f0f7872d4",
         "type": "debug",
         "z": "c8fe70a7b946a093",
-        "name": "show_hex",
+        "name": "Display Configs",
         "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "hex",
-        "targetType": "msg",
+        "complete": "true",
+        "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1160,
-        "y": 240,
+        "x": 820,
+        "y": 100,
         "wires": []
+    },
+    {
+        "id": "21c3e2488c737432",
+        "type": "link in",
+        "z": "c8fe70a7b946a093",
+        "name": "Start JukeBox Processing",
+        "links": [
+            "6414e28ebba71050",
+            "600884ef3fc39f5a",
+            "7a2bdb26d2a37fb6",
+            "55091995478ea561",
+            "816b44b87d8fbb7c",
+            "56842ddf18c41bb5"
+        ],
+        "x": 95,
+        "y": 300,
+        "wires": [
+            [
+                "387122cda5e872ed"
+            ]
+        ]
+    },
+    {
+        "id": "6414e28ebba71050",
+        "type": "link out",
+        "z": "c8fe70a7b946a093",
+        "name": "Start Single",
+        "mode": "link",
+        "links": [
+            "21c3e2488c737432"
+        ],
+        "x": 215,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "55091995478ea561",
+        "type": "link out",
+        "z": "c8fe70a7b946a093",
+        "name": "Start Sequential",
+        "mode": "link",
+        "links": [
+            "21c3e2488c737432"
+        ],
+        "x": 215,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "600884ef3fc39f5a",
+        "type": "link out",
+        "z": "c8fe70a7b946a093",
+        "name": "Start Random",
+        "mode": "link",
+        "links": [
+            "21c3e2488c737432"
+        ],
+        "x": 215,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "7a2bdb26d2a37fb6",
+        "type": "link out",
+        "z": "c8fe70a7b946a093",
+        "name": "Start Playlist",
+        "mode": "link",
+        "links": [
+            "21c3e2488c737432"
+        ],
+        "x": 215,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "816b44b87d8fbb7c",
+        "type": "link out",
+        "z": "c8fe70a7b946a093",
+        "name": "Start List As Singles",
+        "mode": "link",
+        "links": [
+            "21c3e2488c737432"
+        ],
+        "x": 1275,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "642dc4cf0ec2fa69",
+        "type": "function",
+        "z": "c8fe70a7b946a093",
+        "name": "Set Defaults",
+        "func": "try {\n    // Get the jukebox config from global context\n    const jukeboxConfig = global.get('jukeboxConfig');\n\n    if (!jukeboxConfig) {\n        msg.configLoader = {\n            success: false,\n            error: \"jukeboxConfig not found in global context. Ensure config file was loaded first.\"\n        };\n        return msg;\n    }\n\n    // Populate msg.model from config if not set\n    if (!msg.model) {\n        if (!jukeboxConfig.model) {\n            msg.configLoader = {\n                success: false,\n                error: \"msg.model is not set and jukeboxConfig.model is missing\"\n            };\n            return msg;\n        }\n        msg.model = jukeboxConfig.model;\n    }\n\n    // Populate msg.mode from config if not set\n    if (!msg.mode) {\n        if (!jukeboxConfig.mode) {\n            msg.configLoader = {\n                success: false,\n                error: \"msg.mode is not set and jukeboxConfig.mode is missing\"\n            };\n            return msg;\n        }\n        msg.mode = jukeboxConfig.mode;\n    }\n\n    // Populate msg.rate from config if not set\n    if (!msg.rate) {\n        if (!jukeboxConfig.rate) {\n            msg.configLoader = {\n                success: false,\n                error: \"msg.rate is not set and jukeboxConfig.mode is missing\"\n            };\n            return msg;\n        }\n        msg.rate = jukeboxConfig.rate;\n    }\n\n    // Populate msg.playlist from config if not set\n    if (!msg.playlist) {\n        if (!jukeboxConfig.playlist) {\n            msg.configLoader = {\n                success: false,\n                error: \"msg.playlist is not set and jukeboxConfig.playlist is missing\"\n            };\n            return msg;\n        }\n        msg.playlist = jukeboxConfig.playlist;\n    }\n\n    // Return success message\n    msg.configLoader = {\n        success: true,\n        message: \"Configuration loaded successfully\",\n        model: msg.model,\n        mode: msg.mode,\n        playlist: msg.playlist,\n        rate: msg.rate,\n        timestamp: new Date().toISOString()\n    };\n\n    return msg;\n\n} catch (error) {\n    msg.configLoader = {\n        success: false,\n        error: `An unexpected error occurred: ${error.message}`\n    };\n    return msg;\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 190,
+        "y": 380,
+        "wires": [
+            [
+                "487c49f5a2355bab"
+            ]
+        ]
+    },
+    {
+        "id": "2a3df256abf2d178",
+        "type": "debug",
+        "z": "c8fe70a7b946a093",
+        "name": "Show All Payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1350,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "387122cda5e872ed",
+        "type": "function",
+        "z": "c8fe70a7b946a093",
+        "name": "Load Globals",
+        "func": "try {\n    // Configuration - Edit these paths to match your file locations\n    const config = [\n        {\n            globalKey: 'jukeboxData',\n            filePath: '/home/pi/jukebox/jukeboxData.json'\n        },\n        {\n            globalKey: 'jukeboxCatalog',\n            filePath: '/home/pi/jukebox/jukeboxCatalog.json'\n        },\n        {\n            globalKey: 'jukeboxConfig',\n            filePath: '/home/pi/jukebox/jukeboxConfig.json'\n        },\n        {\n            globalKey: 'jukeboxPlaylists',\n            filePath: '/home/pi/jukebox/jukeboxPlaylists.json'\n        }\n    ];\n\n    // Check each required file\n    for (const item of config) {\n        if (!global.get(item.globalKey)) {\n            msg.filePath = item.filePath;\n            msg.globalKey = item.globalKey;\n            node.send(msg);\n            return;\n        }\n    }\n\n    // All required data is loaded\n    const loadedFiles = config.reduce((acc, item) => {\n        acc[item.globalKey] = true;\n        return acc;\n    }, {});\n\n    msg.defaultSettings = {\n        success: true,\n        message: \"All required configuration files are loaded\",\n        ...loadedFiles,\n        timestamp: new Date().toISOString()\n    };\n\n    return msg;\n\n} catch (error) {\n    msg.defaultSettings = {\n        success: false,\n        error: `An unexpected error occurred: ${error.message}`\n    };\n    return msg;\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 230,
+        "y": 300,
+        "wires": [
+            [
+                "c1604d67053ab4ca"
+            ]
+        ]
+    },
+    {
+        "id": "c1604d67053ab4ca",
+        "type": "switch",
+        "z": "c8fe70a7b946a093",
+        "name": "Are Globals Required?",
+        "property": "defaultSettings.success",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "true"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 440,
+        "y": 300,
+        "wires": [
+            [
+                "642dc4cf0ec2fa69"
+            ],
+            [
+                "f5bb88be4e43a428"
+            ]
+        ]
+    },
+    {
+        "id": "56842ddf18c41bb5",
+        "type": "link out",
+        "z": "c8fe70a7b946a093",
+        "name": "Got Globals",
+        "mode": "link",
+        "links": [
+            "21c3e2488c737432"
+        ],
+        "x": 1295,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "edb7b7fe6a65a20c",
+        "type": "inject",
+        "z": "c8fe70a7b946a093",
+        "name": "Clear Configs",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 410,
+        "y": 160,
+        "wires": [
+            [
+                "095d6689d96f9449"
+            ]
+        ]
+    },
+    {
+        "id": "095d6689d96f9449",
+        "type": "function",
+        "z": "c8fe70a7b946a093",
+        "name": "Delete Configs",
+        "func": "// Delete multiple globals\nglobal.set('jukeboxData', undefined);\nglobal.set('jukeboxCatalog', undefined);\nglobal.set('jukeboxConfig', undefined);\nglobal.set('jukeboxPlaylists', undefined);\n\nmsg.deleted = {\n    success: true,\n    message: \"Global variables cleared\"\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 620,
+        "y": 160,
+        "wires": [
+            [
+                "9502699f0f7872d4"
+            ]
+        ]
     }
 ]

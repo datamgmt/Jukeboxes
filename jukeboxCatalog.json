@@ -1,0 +1,502 @@
+{
+  "100": {
+    "artist": "Duran Duran",
+    "title": "Hungry Like The Wolf",
+    "duration": "3:41"
+  },
+  "101": {
+    "artist": "Depeche Mode",
+    "title": "Just Can't Get Enough",
+    "duration": "3:37"
+  },
+  "102": {
+    "artist": "The Human League",
+    "title": "Don't You Want Me",
+    "duration": "4:29"
+  },
+  "103": {
+    "artist": "Eurythmics",
+    "title": "Sweet Dreams",
+    "duration": "3:34"
+  },
+  "104": {
+    "artist": "Culture Club",
+    "title": "Karma Chameleon",
+    "duration": "4:35"
+  },
+  "110": {
+    "artist": "Wham!",
+    "title": "Wake Me Up Before You Go-Go",
+    "duration": "3:54"
+  },
+  "111": {
+    "artist": "Blondie",
+    "title": "Call Me",
+    "duration": "3:22"
+  },
+  "112": {
+    "artist": "Cyndi Lauper",
+    "title": "Girls Just Want to Have Fun",
+    "duration": "3:23"
+  },
+  "113": {
+    "artist": "Spandau Ballet",
+    "title": "True",
+    "duration": "5:02"
+  },
+  "114": {
+    "artist": "Toto",
+    "title": "Africa",
+    "duration": "4:58"
+  },
+  "120": {
+    "artist": "Pet Shop Boys",
+    "title": "West End Girls",
+    "duration": "4:54"
+  },
+  "121": {
+    "artist": "New Order",
+    "title": "Blue Monday",
+    "duration": "7:29"
+  },
+  "122": {
+    "artist": "Soft Cell",
+    "title": "Tainted Love",
+    "duration": "4:32"
+  },
+  "123": {
+    "artist": "Kraftwerk",
+    "title": "The Robots",
+    "duration": "6:09"
+  },
+  "124": {
+    "artist": "Visage",
+    "title": "Fade to Grey",
+    "duration": "4:32"
+  },
+  "130": {
+    "artist": "Gary Numan",
+    "title": "Cars",
+    "duration": "3:34"
+  },
+  "131": {
+    "artist": "Ultravox",
+    "title": "Vienna",
+    "duration": "4:33"
+  },
+  "132": {
+    "artist": "OMD",
+    "title": "If You Leave",
+    "duration": "4:45"
+  },
+  "133": {
+    "artist": "Orchestral Manoeuvres in the Dark",
+    "title": "Electricity",
+    "duration": "4:04"
+  },
+  "134": {
+    "artist": "Tears for Fears",
+    "title": "Everybody Wants to Rule the World",
+    "duration": "4:16"
+  },
+  "140": {
+    "artist": "The Police",
+    "title": "Every Breath You Take",
+    "duration": "4:58"
+  },
+  "141": {
+    "artist": "Sting",
+    "title": "Fields of Gold",
+    "duration": "3:38"
+  },
+  "142": {
+    "artist": "Phil Collins",
+    "title": "In The Air Tonight",
+    "duration": "5:23"
+  },
+  "143": {
+    "artist": "Genesis",
+    "title": "Invisible Touch",
+    "duration": "3:41"
+  },
+  "144": {
+    "artist": "Peter Frampton",
+    "title": "Show Me the Way",
+    "duration": "5:21"
+  },
+  "150": {
+    "artist": "Michael Jackson",
+    "title": "Billie Jean",
+    "duration": "4:57"
+  },
+  "151": {
+    "artist": "Prince",
+    "title": "When Doves Cry",
+    "duration": "4:43"
+  },
+  "152": {
+    "artist": "David Bowie",
+    "title": "Let's Dance",
+    "duration": "3:41"
+  },
+  "153": {
+    "artist": "Madonna",
+    "title": "Like a Virgin",
+    "duration": "4:41"
+  },
+  "154": {
+    "artist": "Whitney Houston",
+    "title": "I Wanna Dance with Somebody",
+    "duration": "3:59"
+  },
+  "160": {
+    "artist": "Lionel Richie",
+    "title": "Hello",
+    "duration": "4:46"
+  },
+  "161": {
+    "artist": "Kenny Rogers",
+    "title": "Lady",
+    "duration": "5:18"
+  },
+  "162": {
+    "artist": "Air Supply",
+    "title": "Lost in Love",
+    "duration": "3:24"
+  },
+  "163": {
+    "artist": "Richard Marx",
+    "title": "Right Here Waiting",
+    "duration": "4:23"
+  },
+  "164": {
+    "artist": "George Michael",
+    "title": "Careless Whisper",
+    "duration": "5:12"
+  },
+  "170": {
+    "artist": "Billy Idol",
+    "title": "White Wedding",
+    "duration": "4:22"
+  },
+  "171": {
+    "artist": "Mötley Crüe",
+    "title": "Girls, Girls, Girls",
+    "duration": "4:28"
+  },
+  "172": {
+    "artist": "Def Leppard",
+    "title": "Pour Some Sugar On Me",
+    "duration": "4:19"
+  },
+  "173": {
+    "artist": "Guns N' Roses",
+    "title": "Sweet Child O' Mine",
+    "duration": "5:56"
+  },
+  "174": {
+    "artist": "Van Halen",
+    "title": "Jump",
+    "duration": "4:01"
+  },
+  "180": {
+    "artist": "The Cure",
+    "title": "Just Like Heaven",
+    "duration": "3:25"
+  },
+  "181": {
+    "artist": "Echo & the Bunnymen",
+    "title": "The Killing Moon",
+    "duration": "4:49"
+  },
+  "182": {
+    "artist": "Joy Division",
+    "title": "Love Will Tear Us Apart",
+    "duration": "3:24"
+  },
+  "183": {
+    "artist": "The Smiths",
+    "title": "How Soon Is Now?",
+    "duration": "6:08"
+  },
+  "184": {
+    "artist": "Morrissey",
+    "title": "First of the Gang to Die",
+    "duration": "3:37"
+  },
+  "190": {
+    "artist": "INXS",
+    "title": "Need You Tonight",
+    "duration": "3:55"
+  },
+  "191": {
+    "artist": "Simple Minds",
+    "title": "Don't You (Forget About Me)",
+    "duration": "3:41"
+  },
+  "192": {
+    "artist": "U2",
+    "title": "With or Without You",
+    "duration": "4:56"
+  },
+  "193": {
+    "artist": "REM",
+    "title": "It's the End of the World",
+    "duration": "4:09"
+  },
+  "194": {
+    "artist": "The Killers",
+    "title": "Mr. Brightside",
+    "duration": "3:44"
+  },
+  "200": {
+    "artist": "A Flock of Seagulls",
+    "title": "I Ran",
+    "duration": "3:30"
+  },
+  "201": {
+    "artist": "Talking Heads",
+    "title": "Once in a Lifetime",
+    "duration": "4:20"
+  },
+  "202": {
+    "artist": "The B-52s",
+    "title": "Love Shack",
+    "duration": "3:29"
+  },
+  "203": {
+    "artist": "Men at Work",
+    "title": "Down Under",
+    "duration": "3:16"
+  },
+  "204": {
+    "artist": "Dexys Midnight Runners",
+    "title": "Come On Eileen",
+    "duration": "3:50"
+  },
+  "210": {
+    "artist": "Kim Carnes",
+    "title": "Bette Davis Eyes",
+    "duration": "2:59"
+  },
+  "211": {
+    "artist": "Bonnie Tyler",
+    "title": "Total Eclipse of the Heart",
+    "duration": "6:24"
+  },
+  "212": {
+    "artist": "Pat Benatar",
+    "title": "Love Is a Battlefield",
+    "duration": "4:22"
+  },
+  "213": {
+    "artist": "Joan Jett",
+    "title": "I Love Rock n Roll",
+    "duration": "3:52"
+  },
+  "214": {
+    "artist": "Quarterflash",
+    "title": "Harden My Heart",
+    "duration": "3:36"
+  },
+  "220": {
+    "artist": "Survivor",
+    "title": "Eye of the Tiger",
+    "duration": "4:02"
+  },
+  "221": {
+    "artist": "Rocky IV Soundtrack",
+    "title": "No Easy Way Out",
+    "duration": "4:00"
+  },
+  "222": {
+    "artist": "Hall & Oates",
+    "title": "Maneater",
+    "duration": "3:35"
+  },
+  "223": {
+    "artist": "Daryl Hall",
+    "title": "Out of Touch",
+    "duration": "3:58"
+  },
+  "224": {
+    "artist": "Commodores",
+    "title": "Nightshift",
+    "duration": "4:19"
+  },
+  "230": {
+    "artist": "Frankie Goes to Hollywood",
+    "title": "Relax",
+    "duration": "4:20"
+  },
+  "231": {
+    "artist": "Frankie Goes to Hollywood",
+    "title": "Two Tribes",
+    "duration": "5:35"
+  },
+  "232": {
+    "artist": "Marc Almond",
+    "title": "Say Hello Wave Goodbye",
+    "duration": "4:38"
+  },
+  "233": {
+    "artist": "The Human League",
+    "title": "Human",
+    "duration": "4:31"
+  },
+  "234": {
+    "artist": "Heaven 17",
+    "title": "Come Live With Me",
+    "duration": "3:44"
+  },
+  "240": {
+    "artist": "Bananarama",
+    "title": "Venus",
+    "duration": "3:33"
+  },
+  "241": {
+    "artist": "Go Go's",
+    "title": "Our Lips Are Sealed",
+    "duration": "3:29"
+  },
+  "242": {
+    "artist": "The Pretenders",
+    "title": "Brass in Pocket",
+    "duration": "3:25"
+  },
+  "243": {
+    "artist": "Siouxsie and the Banshees",
+    "title": "Cities in Dust",
+    "duration": "4:40"
+  },
+  "244": {
+    "artist": "The Bangles",
+    "title": "Walk Like an Egyptian",
+    "duration": "3:17"
+  },
+  "250": {
+    "artist": "Chaka Khan",
+    "title": "I Feel For You",
+    "duration": "3:31"
+  },
+  "251": {
+    "artist": "Anita Baker",
+    "title": "Sweet Love",
+    "duration": "3:46"
+  },
+  "252": {
+    "artist": "Luther Vandross",
+    "title": "Never Too Much",
+    "duration": "3:00"
+  },
+  "253": {
+    "artist": "Marvin Gaye",
+    "title": "Sexual Healing",
+    "duration": "4:00"
+  },
+  "254": {
+    "artist": "Sade",
+    "title": "The Sweetest Taboo",
+    "duration": "3:33"
+  },
+  "260": {
+    "artist": "Oingo Boingo",
+    "title": "Dead Man's Party",
+    "duration": "3:27"
+  },
+  "261": {
+    "artist": "Devo",
+    "title": "Whip It",
+    "duration": "3:26"
+  },
+  "262": {
+    "artist": "Blancmange",
+    "title": "Living On the Ceiling",
+    "duration": "3:43"
+  },
+  "263": {
+    "artist": "The Flock of Seagulls",
+    "title": "Space Age Love Song",
+    "duration": "3:41"
+  },
+  "264": {
+    "artist": "Soft Cell",
+    "title": "Say Hello Wave Goodbye",
+    "duration": "4:33"
+  },
+  "270": {
+    "artist": "Duran Duran",
+    "title": "Rio",
+    "duration": "3:40"
+  },
+  "271": {
+    "artist": "Duran Duran",
+    "title": "Girls on Film",
+    "duration": "3:48"
+  },
+  "272": {
+    "artist": "Duran Duran",
+    "title": "The Reflex",
+    "duration": "5:25"
+  },
+  "273": {
+    "artist": "Duran Duran",
+    "title": "Union of the Snake",
+    "duration": "3:28"
+  },
+  "274": {
+    "artist": "Duran Duran",
+    "title": "Is There Something I Should Know?",
+    "duration": "3:36"
+  },
+  "280": {
+    "artist": "Dexy's Midnight Runners",
+    "title": "There There My Dear",
+    "duration": "3:17"
+  },
+  "281": {
+    "artist": "Flock of Seagulls",
+    "title": "Wishing You Were Here",
+    "duration": "3:42"
+  },
+  "282": {
+    "artist": "Ultravox",
+    "title": "Reap the Wild Wind",
+    "duration": "4:17"
+  },
+  "283": {
+    "artist": "Spandau Ballet",
+    "title": "Gold",
+    "duration": "3:16"
+  },
+  "284": {
+    "artist": "Spandau Ballet",
+    "title": "Communication",
+    "duration": "4:10"
+  },
+  "290": {
+    "artist": "Orchestral Manoeuvres in the Dark",
+    "title": "Joan of Arc",
+    "duration": "4:38"
+  },
+  "291": {
+    "artist": "OMD",
+    "title": "Enola Gay",
+    "duration": "4:01"
+  },
+  "292": {
+    "artist": "Gary Numan",
+    "title": "We Are Glass",
+    "duration": "3:50"
+  },
+  "293": {
+    "artist": "Gary Numan",
+    "title": "Tubeway Army",
+    "duration": "3:32"
+  },
+  "294": {
+    "artist": "Kraftwerk",
+    "title": "The Man-Machine",
+    "duration": "4:24"
+  }
+}

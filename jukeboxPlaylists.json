@@ -1,0 +1,90 @@
+{
+  "80s Pop Hits": [
+    {
+      "selection": "001",
+      "artist": "Duran Duran",
+      "title": "Hungry Like The Wolf",
+      "duration": "3:41"
+    },
+    {
+      "selection": "002",
+      "artist": "The Human League",
+      "title": "Don't You Want Me",
+      "duration": "4:29"
+    },
+    {
+      "selection": "110",
+      "artist": "Depeche Mode",
+      "title": "Just Can't Get Enough",
+      "duration": "3:37"
+    },
+    {
+      "selection": "111",
+      "artist": "Eurythmics",
+      "title": "Sweet Dreams",
+      "duration": "3:34"
+    },
+    {
+      "selection": "112",
+      "artist": "Culture Club",
+      "title": "Karma Chameleon",
+      "duration": "4:35"
+    },
+    {
+      "selection": "120",
+      "artist": "Wham!",
+      "title": "Wake Me Up Before You Go-Go",
+      "duration": "3:54"
+    },
+    {
+      "selection": "121",
+      "artist": "Blondie",
+      "title": "Call Me",
+      "duration": "3:22"
+    },
+    {
+      "selection": "200",
+      "artist": "Cyndi Lauper",
+      "title": "Girls Just Want to Have Fun",
+      "duration": "3:23"
+    },
+    {
+      "selection": "201",
+      "artist": "Spandau Ballet",
+      "title": "True",
+      "duration": "5:02"
+    },
+    {
+      "selection": "202",
+      "artist": "Toto",
+      "title": "Africa",
+      "duration": "4:58"
+    }
+  ],
+  "Synthpop Classics": [
+    {
+      "selection": "001",
+      "artist": "Pet Shop Boys",
+      "title": "West End Girls",
+      "duration": "4:54"
+    },
+    {
+      "selection": "002",
+      "artist": "New Order",
+      "title": "Blue Monday",
+      "duration": "7:29"
+    },
+    {
+      "selection": "110",
+      "artist": "Soft Cell",
+      "title": "Tainted Love",
+      "duration": "4:32"
+    },
+    {
+      "selection": "111",
+      "artist": "Kraftwerk",
+      "title": "The Robots",
+      "duration": "6:09"
+    }
+  ]
+}
