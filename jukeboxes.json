@@ -1,0 +1,95 @@
+{
+  "AMI": {
+    "models": {}
+  },
+  "Rock-Ola": {
+    "models": {
+      "459-100": {
+        "action": "flash-on",
+        "delay": 2,
+        "selection": {
+          "1": {
+            "1": {
+              "device": 1,
+              "relay": 1
+            },
+            "2": {
+              "device": 1,
+              "relay": 2
+            }
+          },
+          "2": {
+            "0": {
+              "device": 1,
+              "relay": 10
+            },
+            "1": {
+              "device": 1,
+              "relay": 11
+            },
+            "2": {
+              "device": 1,
+              "relay": 12
+            },
+            "3": {
+              "device": 1,
+              "relay": 13
+            },
+            "4": {
+              "device": 1,
+              "relay": 14
+            },
+            "5": {
+              "device": 1,
+              "relay": 15
+            },
+            "6": {
+              "device": 1,
+              "relay": 16
+            },
+            "7": {
+              "device": 1,
+              "relay": 17
+            },
+            "8": {
+              "device": 1,
+              "relay": 18
+            },
+            "9": {
+              "device": 1,
+              "relay": 19
+            }
+          },
+          "3": {
+            "0": {
+              "device": 1,
+              "relay": 20
+            },
+            "1": {
+              "device": 1,
+              "relay": 21
+            },
+            "2": {
+              "device": 1,
+              "relay": 22
+            },
+            "3": {
+              "device": 1,
+              "relay": 23
+            },
+            "4": {
+              "device": 1,
+              "relay": 24
+            }
+          }
+        }
+      }
+    }
+  },
+  "Seeburg": {
+    "models": {}
+  },
+  "Wurlitzer": {
+    "models": {}
+  }
+}

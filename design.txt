@@ -1,0 +1,60 @@
+Hi Ben/Polly
+
+I went to see Stephen Clothier and the Rock-Ola 459 the other day - it is a nice machine
+
+I've been rapidly learning about these things and obviously it is an old piece of kit - I have several Citronics 1970s DJ Decks
+
+I am wondering what it would cost to 'enhance' the unit and would you be able to help do it.
+
+There are three things I would like to do
+
+The first is change the selector display at the top - this is cosmetic and I can probably live without if it is expensive
+
+The second thing is to have autoplay so that it will just play a series of records - this apparently wasn't a feature available for the system
+
+The third thing is to be able to use the speakers to play music from an external source - again not available in this unit.
+
+I've done some research it strikes me that I could potentially upgrade the system to do this.
+
+My plan would be to put a Raspberry Pi into the unit
+
+The Raspberry Pi would have a Behringer UCA202 USB to RCA converter that could be connected after the Pre-Amp at Line level
+https://www.behringer.com/product.html?modelCode=0805-AAC
+
+The Raspberry Pi can also control a 32-Ch Relay Module via a RS485 CAN Hat
+https://www.waveshare.com/rs485-can-hat.htm
+https://www.waveshare.com/modbus-rtu-relay-32ch.htm
+
+The Raspberry Pi would also need a UPS for graceful shutdown
+https://geekworm.com/products/x728?srsltid=AfmBOoqLg72DIKz7osYLtyZktOIUp77Lq9Mo0vHScv_tRI77IWSSSYi8
+
+The Raspberry Pi and the Relay Module would also need power (probably easist via their standard 240V transformers)
+The Relay needs 12V 2A 2.1mm DC Barrel Jack and the Raspberry Pi 5V 5A via USB-C
+
+It is the wiring of all this that I need help on - would you be able to wire in the speaker RCA and the Relay to the push buttons or the selector circuitary
+
+Would you be able to do this and any idea how much it would cost?
+Also if there is a better way to achive this let me know :-)
+
+I am a retired CTO & programmer so the software part is easy. I've already knocked up some rough code
+
+I would write and publish open source packages that would
+
+* Linear Autoplay (101, 102, 103, 104, 111, etc.)
+* Random Autoplay (pick songs at random, no repeats until all played)
+* Allow remote song selection
+* Allow multiple play lists
+* Allow Spotify streaming to speaker
+* Allow Apple Airplay streaming to speaker
+
+* Web interface configuration
+* Apple App Integration
+* MQTT intgeration
+
+* Wifi Connection & Management 
+
+Finally I found a 456 Service Manual online - let me know if you would like a copy (I assume you already have one but just in case)
+
+All the best
+
+David

@@ -1,0 +1,171 @@
+[
+    {
+        "id": "c8fe70a7b946a093",
+        "type": "tab",
+        "label": "Jukebox",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "4e1ac35093255c6e",
+        "type": "inject",
+        "z": "c8fe70a7b946a093",
+        "name": "Selection",
+        "props": [
+            {
+                "p": "selection",
+                "v": "182",
+                "vt": "str"
+            },
+            {
+                "p": "model",
+                "v": "459-100",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 180,
+        "y": 180,
+        "wires": [
+            [
+                "145f6ca4ba89752c",
+                "efce654434ee0b0e"
+            ]
+        ]
+    },
+    {
+        "id": "145f6ca4ba89752c",
+        "type": "function",
+        "z": "c8fe70a7b946a093",
+        "name": "get_jukeboxData",
+        "func": "msg.jukeboxData = {\n    \"AMI\": {\n        \"models\": {}\n    },\n    \"Rock-Ola\": {\n        \"models\": {\n            \"459-100\": {\n                \"action\": \"flash-on\",\n                \"delay\": 2,\n                \"selection\": {\n                    \"1\": {\n                        \"1\": {\n                            \"device\": 1,\n                            \"relay\": 1\n                        },\n                        \"2\": {\n                            \"device\": 1,\n                            \"relay\": 2\n                        }\n                    },\n                    \"2\": {\n                        \"0\": {\n                            \"device\": 1,\n                            \"relay\": 10\n                        },\n                        \"1\": {\n                            \"device\": 1,\n                            \"relay\": 11\n                        },\n                        \"2\": {\n                            \"device\": 1,\n                            \"relay\": 12\n                        },\n                        \"3\": {\n                            \"device\": 1,\n                            \"relay\": 13\n                        },\n                        \"4\": {\n                            \"device\": 1,\n                            \"relay\": 14\n                        },\n                        \"5\": {\n                            \"device\": 1,\n                            \"relay\": 15\n                        },\n                        \"6\": {\n                            \"device\": 1,\n                            \"relay\": 16\n                        },\n                        \"7\": {\n                            \"device\": 1,\n                            \"relay\": 17\n                        },\n                        \"8\": {\n                            \"device\": 1,\n                            \"relay\": 18\n                        },\n                        \"9\": {\n                            \"device\": 1,\n                            \"relay\": 19\n                        }\n                    },\n                    \"3\": {\n                        \"0\": {\n                            \"device\": 1,\n                            \"relay\": 20\n                        },\n                        \"1\": {\n                            \"device\": 1,\n                            \"relay\": 21\n                        },\n                        \"2\": {\n                            \"device\": 1,\n                            \"relay\": 22\n                        },\n                        \"3\": {\n                            \"device\": 1,\n                            \"relay\": 23\n                        },\n                        \"4\": {\n                            \"device\": 1,\n                            \"relay\": 24\n                        }\n                    }\n                }\n            }\n        }\n    },\n    \"Seeburg\": {\n        \"models\": {}\n    },\n    \"Wurlitzer\": {\n        \"models\": {}\n    }\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 180,
+        "wires": [
+            [
+                "d1e495f2c7d82c73",
+                "2bc0b6d6993d8060"
+            ]
+        ]
+    },
+    {
+        "id": "efce654434ee0b0e",
+        "type": "debug",
+        "z": "c8fe70a7b946a093",
+        "name": "Show selection",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "selection",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 400,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "2bc0b6d6993d8060",
+        "type": "function",
+        "z": "c8fe70a7b946a093",
+        "name": "get_buttons",
+        "func": "try {\n    // Extract inputs from msg\n    const jukeboxModel = msg.model;\n    const sequence = msg.selection;\n    const jukeboxData = msg.jukeboxData;\n\n    // Validate required inputs\n    if (!jukeboxModel) {\n        msg.buttons = {\n            success: false,\n            error: \"msg.model is required\"\n        };\n        return msg;\n    }\n\n    if (!sequence) {\n        msg.buttons = {\n            success: false,\n            error: \"msg.selection is required\"\n        };\n        return msg;\n    }\n\n    if (!jukeboxData) {\n        msg.buttons = {\n            success: false,\n            error: \"msg.jukeboxData is required\"\n        };\n        return msg;\n    }\n\n    // Find the jukebox brand and model\n    let model = null;\n    let brand = null;\n\n    for (const [brandName, brandData] of Object.entries(jukeboxData)) {\n        if (brandData.models[jukeboxModel]) {\n            brand = brandName;\n            model = brandData.models[jukeboxModel];\n            break;\n        }\n    }\n\n    // Check if model exists\n    if (!model) {\n        msg.buttons = {\n            success: false,\n            error: `Model ${jukeboxModel} not found`\n        };\n        return msg;\n    }\n\n    // Get the selection structure\n    const selection = model.selection;\n    const selectionLevels = Object.keys(selection).length;\n\n    // Validate sequence length matches selection levels\n    if (sequence.length !== selectionLevels) {\n        msg.buttons = {\n            success: false,\n            error: `Invalid sequence length. Expected ${selectionLevels} digits, got ${sequence.length}`\n        };\n        return msg;\n    }\n\n    // Validate that all characters exist in their respective selection levels\n    for (let i = 0; i < sequence.length; i++) {\n        const levelKey = String(i + 1);\n        const charValue = sequence[i];\n\n        if (!selection[levelKey] || !selection[levelKey][charValue]) {\n            msg.buttons = {\n                success: false,\n                error: `Invalid character '${charValue}' at position ${i + 1}. Valid options at level ${levelKey}: ${Object.keys(selection[levelKey]).join(\", \")}`\n            };\n            return msg;\n        }\n    }\n\n    // Extract device and relay information\n    const results = [];\n\n    for (let i = 0; i < sequence.length; i++) {\n        const levelKey = String(i + 1);\n        const charValue = sequence[i];\n\n        const selectionData = selection[levelKey][charValue];\n        results.push({\n            level: levelKey,\n            digit: charValue,\n            device: selectionData.device,\n            relay: selectionData.relay\n        });\n    }\n\n    // Return successful result\n    msg.buttons = {\n        success: true,\n        brand: brand,\n        model: jukeboxModel,\n        sequence: sequence,\n        action: model.action,\n        delay: model.delay,\n        results: results\n    };\n\n    return msg;\n\n} catch (error) {\n    msg.buttons = {\n        success: false,\n        error: `An error occurred: ${error.message}`\n    };\n    return msg;\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 180,
+        "wires": [
+            [
+                "12f6956628c8d00f",
+                "22635c0b62a654f5"
+            ]
+        ]
+    },
+    {
+        "id": "d1e495f2c7d82c73",
+        "type": "debug",
+        "z": "c8fe70a7b946a093",
+        "name": "show jukeboxData",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "jukeboxData",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 690,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "12f6956628c8d00f",
+        "type": "debug",
+        "z": "c8fe70a7b946a093",
+        "name": "show_buttons",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "buttons",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 940,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "22635c0b62a654f5",
+        "type": "function",
+        "z": "c8fe70a7b946a093",
+        "name": "get_hex",
+        "func": "try {\n    // Validate msg.buttons exists and is successful\n    if (!msg.buttons) {\n        msg.hex = {\n            success: false,\n            error: \"msg.buttons is required\"\n        };\n        return msg;\n    }\n\n    if (!msg.buttons.success) {\n        msg.hex = {\n            success: false,\n            error: msg.buttons.error || \"Previous step failed\"\n        };\n        return msg;\n    }\n\n    if (!msg.buttons.results || !Array.isArray(msg.buttons.results)) {\n        msg.hex = {\n            success: false,\n            error: \"msg.buttons.results is missing or not an array\"\n        };\n        return msg;\n    }\n\n    if (!msg.buttons.action) {\n        msg.hex = {\n            success: false,\n            error: \"msg.buttons.action is required\"\n        };\n        return msg;\n    }\n\n    if (msg.buttons.delay === undefined || msg.buttons.delay === null) {\n        msg.hex = {\n            success: false,\n            error: \"msg.buttons.delay is required\"\n        };\n        return msg;\n    }\n\n    // Function to calculate CRC16 (MODBUS variant)\n    function calculateCRC16(data) {\n        let crc = 0xFFFF;\n        for (let i = 0; i < data.length; i++) {\n            crc ^= data[i];\n            for (let j = 0; j < 8; j++) {\n                if (crc & 0x0001) {\n                    crc = (crc >> 1) ^ 0xA001;\n                } else {\n                    crc = crc >> 1;\n                }\n            }\n        }\n        return crc;\n    }\n\n    // Function to convert number to hex string with leading zero\n    function toHex(num, padding = 2) {\n        return num.toString(16).toUpperCase().padStart(padding, '0');\n    }\n\n    // Determine action code\n    const actionCode = msg.buttons.action === \"flash-on\" ? 0x02 : 0x04;\n\n    // Convert delay to two bytes (big-endian)\n    const delayHigh = (msg.buttons.delay >> 8) & 0xFF;\n    const delayLow = msg.buttons.delay & 0xFF;\n\n    // Generate hex strings for each result\n    const hexStrings = [];\n\n    for (const result of msg.buttons.results) {\n        const device = result.device;\n        const relay = result.relay;\n\n        // Build data bytes for CRC calculation (first 6 bytes)\n        const dataBytes = [\n            device,           // AA - Device\n            0x05,             // BB - Command (always 05)\n            actionCode,       // CC - Action (02 or 04)\n            relay,            // DD - Relay\n            delayHigh,        // EE - Delay high byte\n            delayLow          // FF - Delay low byte\n        ];\n\n        // Calculate CRC16\n        const crc = calculateCRC16(dataBytes);\n        const crcHigh = (crc >> 8) & 0xFF;\n        const crcLow = crc & 0xFF;\n\n        // Build hex string\n        const hexString = `${toHex(device)} ${toHex(0x05)} ${toHex(actionCode)} ${toHex(relay)} ${toHex(delayHigh)} ${toHex(delayLow)} ${toHex(crcHigh)} ${toHex(crcLow)}`;\n\n        hexStrings.push(hexString);\n    }\n\n    // Return results\n    msg.hex = {\n        success: true,\n        action: msg.buttons.action,\n        delay: msg.buttons.delay,\n        hexStrings: hexStrings\n    };\n\n    return msg;\n\n} catch (error) {\n    msg.hex = {\n        success: false,\n        error: `An error occurred: ${error.message}`\n    };\n    return msg;\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 920,
+        "y": 180,
+        "wires": [
+            [
+                "44a09d5b3e57f394"
+            ]
+        ]
+    },
+    {
+        "id": "44a09d5b3e57f394",
+        "type": "debug",
+        "z": "c8fe70a7b946a093",
+        "name": "show_hex",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "hex",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1160,
+        "y": 240,
+        "wires": []
+    }
+]
