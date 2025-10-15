@@ -8,54 +8,19 @@
         "env": []
     },
     {
-        "id": "4e1ac35093255c6e",
-        "type": "inject",
-        "z": "c8fe70a7b946a093",
-        "name": "Single",
-        "props": [
-            {
-                "p": "model",
-                "v": "",
-                "vt": "str"
-            },
-            {
-                "p": "selection",
-                "v": "182",
-                "vt": "str"
-            },
-            {
-                "p": "mode",
-                "v": "single",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 110,
-        "y": 100,
-        "wires": [
-            [
-                "6414e28ebba71050"
-            ]
-        ]
-    },
-    {
         "id": "2bc0b6d6993d8060",
         "type": "function",
         "z": "c8fe70a7b946a093",
-        "name": "get_buttons",
-        "func": "try {\n    // Extract inputs from msg\n    const jukeboxModel = msg.model;\n    const sequence = msg.selection;\n    const jukeboxData = global.get('jukeboxData');\n\n    // Validate required inputs\n    if (!jukeboxModel) {\n        msg.buttons = {\n            success: false,\n            error: \"msg.model is required\"\n        };\n        return msg;\n    }\n\n    if (!sequence) {\n        msg.buttons = {\n            success: false,\n            error: \"msg.selection is required\"\n        };\n        return msg;\n    }\n\n    if (!jukeboxData) {\n        msg.buttons = {\n            success: false,\n            error: \"global.jukeboxData is required\"\n        };\n        return msg;\n    }\n\n    // Find the jukebox brand and model\n    let model = null;\n    let brand = null;\n\n    for (const [brandName, brandData] of Object.entries(jukeboxData)) {\n        if (brandData.models[jukeboxModel]) {\n            brand = brandName;\n            model = brandData.models[jukeboxModel];\n            break;\n        }\n    }\n\n    // Check if model exists\n    if (!model) {\n        msg.buttons = {\n            success: false,\n            error: `Model ${jukeboxModel} not found`\n        };\n        return msg;\n    }\n\n    // Get the selection structure\n    const selection = model.selection;\n    const selectionLevels = Object.keys(selection).length;\n\n    // Validate sequence length matches selection levels\n    if (sequence.length !== selectionLevels) {\n        msg.buttons = {\n            success: false,\n            error: `Invalid sequence length. Expected ${selectionLevels} digits, got ${sequence.length}`\n        };\n        return msg;\n    }\n\n    // Validate that all characters exist in their respective selection levels\n    for (let i = 0; i < sequence.length; i++) {\n        const levelKey = String(i + 1);\n        const charValue = sequence[i];\n\n        if (!selection[levelKey] || !selection[levelKey][charValue]) {\n            msg.buttons = {\n                success: false,\n                error: `Invalid character '${charValue}' at position ${i + 1}. Valid options at level ${levelKey}: ${Object.keys(selection[levelKey]).join(\", \")}`\n            };\n            return msg;\n        }\n    }\n\n    // Extract device and relay information\n    const results = [];\n\n    for (let i = 0; i < sequence.length; i++) {\n        const levelKey = String(i + 1);\n        const charValue = sequence[i];\n\n        const selectionData = selection[levelKey][charValue];\n        results.push({\n            level: levelKey,\n            digit: charValue,\n            device: selectionData.device,\n            relay: selectionData.relay\n        });\n    }\n\n    // Return successful result\n    msg.buttons = {\n        success: true,\n        brand: brand,\n        model: jukeboxModel,\n        sequence: sequence,\n        action: model.action,\n        delay: model.delay,\n        results: results\n    };\n\n    return msg;\n\n} catch (error) {\n    msg.buttons = {\n        success: false,\n        error: `An error occurred: ${error.message}`\n    };\n    return msg;\n}",
+        "name": "Get Buttons",
+        "func": "try {\n    // Extract inputs from msg\n    const jukeboxConfig = global.get('jukeboxConfig')\n    const sequence = msg.selections;\n    const jukeboxData = global.get('jukeboxData');\n    const jukeboxModel = jukeboxConfig.model;\n\n    // Validate required inputs\n    if (!jukeboxModel) {\n        msg.buttons = {\n            success: false,\n            error: \"global.jukeboxConfig.model is required\"\n        };\n        return msg;\n    }\n\n    if (!sequence) {\n        msg.buttons = {\n            success: false,\n            error: \"msg.selection is required\" \n        };\n        return msg;\n    }\n\n    if (!jukeboxData) {\n        msg.buttons = {\n            success: false,\n            error: \"global.jukeboxData is required\"\n        };\n        return msg;\n    }\n\n    // Find the jukebox brand and model\n    let model = null;\n    let brand = null;\n\n    for (const [brandName, brandData] of Object.entries(jukeboxData)) {\n        if (brandData.models[jukeboxModel]) {\n            brand = brandName;\n            model = brandData.models[jukeboxModel];\n            break;\n        }\n    }\n\n    // Check if model exists\n    if (!model) {\n        msg.buttons = {\n            success: false,\n            error: `Model ${jukeboxModel} not found`\n        };\n        return msg;\n    }\n\n    // Get the selection structure\n    const selection = model.selection;\n    const selectionLevels = Object.keys(selection).length;\n\n    // Validate sequence length matches selection levels\n    if (sequence.length !== selectionLevels) {\n        msg.buttons = {\n            success: false,\n            error: `Invalid sequence length. Expected ${selectionLevels} digits, got ${sequence.length}`\n        };\n        return msg;\n    }\n\n    // Validate that all characters exist in their respective selection levels\n    for (let i = 0; i < sequence.length; i++) {\n        const levelKey = String(i + 1);\n        const charValue = sequence[i];\n\n        if (!selection[levelKey] || !selection[levelKey][charValue]) {\n            msg.buttons = {\n                success: false,\n                error: `Invalid character '${charValue}' at position ${i + 1}. Valid options at level ${levelKey}: ${Object.keys(selection[levelKey]).join(\", \")}`\n            };\n            return msg;\n        }\n    }\n\n    // Extract device and relay information\n    const results = [];\n\n    for (let i = 0; i < sequence.length; i++) {\n        const levelKey = String(i + 1);\n        const charValue = sequence[i];\n\n        const selectionData = selection[levelKey][charValue];\n        results.push({\n            level: levelKey,\n            digit: charValue,\n            device: selectionData.device,\n            relay: selectionData.relay\n        });\n    }\n\n    // Return successful result\n    msg.buttons = {\n        success: true,\n        brand: brand,\n        model: jukeboxModel,\n        sequence: sequence,\n        action: model.action,\n        delay: model.delay,\n        results: results\n    };\n\n    return msg;\n\n} catch (error) {\n    msg.buttons = {\n        success: false,\n        error: `An error occurred: ${error.message}`\n    };\n    return msg;\n}",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 650,
-        "y": 400,
+        "x": 1250,
+        "y": 220,
         "wires": [
             [
                 "22635c0b62a654f5"
@@ -66,7 +31,7 @@
         "id": "22635c0b62a654f5",
         "type": "function",
         "z": "c8fe70a7b946a093",
-        "name": "get_hex",
+        "name": "Get Hex",
         "func": "try {\n    // Validate msg.buttons exists and is successful\n    if (!msg.buttons) {\n        msg.hex = {\n            success: false,\n            error: \"msg.buttons is required\"\n        };\n        return msg;\n    }\n\n    if (!msg.buttons.success) {\n        msg.hex = {\n            success: false,\n            error: msg.buttons.error || \"Previous step failed\"\n        };\n        return msg;\n    }\n\n    if (!msg.buttons.results || !Array.isArray(msg.buttons.results)) {\n        msg.hex = {\n            success: false,\n            error: \"msg.buttons.results is missing or not an array\"\n        };\n        return msg;\n    }\n\n    if (!msg.buttons.action) {\n        msg.hex = {\n            success: false,\n            error: \"msg.buttons.action is required\"\n        };\n        return msg;\n    }\n\n    if (msg.buttons.delay === undefined || msg.buttons.delay === null) {\n        msg.hex = {\n            success: false,\n            error: \"msg.buttons.delay is required\"\n        };\n        return msg;\n    }\n\n    // Function to calculate CRC16 (MODBUS variant)\n    function calculateCRC16(data) {\n        let crc = 0xFFFF;\n        for (let i = 0; i < data.length; i++) {\n            crc ^= data[i];\n            for (let j = 0; j < 8; j++) {\n                if (crc & 0x0001) {\n                    crc = (crc >> 1) ^ 0xA001;\n                } else {\n                    crc = crc >> 1;\n                }\n            }\n        }\n        return crc;\n    }\n\n    // Function to convert number to hex string with leading zero\n    function toHex(num, padding = 2) {\n        return num.toString(16).toUpperCase().padStart(padding, '0');\n    }\n\n    // Determine action code\n    const actionCode = msg.buttons.action === \"flash-on\" ? 0x02 : 0x04;\n\n    // Convert delay to two bytes (big-endian)\n    const delayHigh = (msg.buttons.delay >> 8) & 0xFF;\n    const delayLow = msg.buttons.delay & 0xFF;\n\n    // Generate hex strings for each result\n    const hexStrings = [];\n\n    for (const result of msg.buttons.results) {\n        const device = result.device;\n        const relay = result.relay;\n\n        // Build data bytes for CRC calculation (first 6 bytes)\n        const dataBytes = [\n            device,           // AA - Device\n            0x05,             // BB - Command (always 05)\n            actionCode,       // CC - Action (02 or 04)\n            relay,            // DD - Relay\n            delayHigh,        // EE - Delay high byte\n            delayLow          // FF - Delay low byte\n        ];\n\n        // Calculate CRC16\n        const crc = calculateCRC16(dataBytes);\n        const crcHigh = (crc >> 8) & 0xFF;\n        const crcLow = crc & 0xFF;\n\n        // Build hex string\n        const hexString = `${toHex(device)} ${toHex(0x05)} ${toHex(actionCode)} ${toHex(relay)} ${toHex(delayHigh)} ${toHex(delayLow)} ${toHex(crcHigh)} ${toHex(crcLow)}`;\n\n        hexStrings.push(hexString);\n    }\n\n    // Return results\n    msg.hex = {\n        success: true,\n        action: msg.buttons.action,\n        delay: msg.buttons.delay,\n        hexStrings: hexStrings\n    };\n\n    return msg;\n\n} catch (error) {\n    msg.hex = {\n        success: false,\n        error: `An error occurred: ${error.message}`\n    };\n    return msg;\n}",
         "outputs": 1,
         "timeout": 0,
@@ -74,8 +39,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 900,
-        "y": 400,
+        "x": 1440,
+        "y": 220,
         "wires": [
             [
                 "fdcf6fff3d42db3e"
@@ -83,148 +48,10 @@
         ]
     },
     {
-        "id": "487c49f5a2355bab",
-        "type": "switch",
-        "z": "c8fe70a7b946a093",
-        "name": "Select Mode",
-        "property": "mode",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "single",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "sequential",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "random",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "playlist",
-                "vt": "str"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 4,
-        "x": 390,
-        "y": 420,
-        "wires": [
-            [
-                "2bc0b6d6993d8060"
-            ],
-            [
-                "8dbd770eab9821ee"
-            ],
-            [
-                "973200f73e90c3cc"
-            ],
-            []
-        ]
-    },
-    {
-        "id": "a375f5b40bd5267b",
-        "type": "inject",
-        "z": "c8fe70a7b946a093",
-        "name": "Sequential",
-        "props": [
-            {
-                "p": "model",
-                "v": "",
-                "vt": "str"
-            },
-            {
-                "p": "mode",
-                "v": "sequential",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 120,
-        "y": 140,
-        "wires": [
-            [
-                "55091995478ea561"
-            ]
-        ]
-    },
-    {
-        "id": "8dbd770eab9821ee",
-        "type": "function",
-        "z": "c8fe70a7b946a093",
-        "name": "Sequential Generator",
-        "func": "try {\n\n    // Validate msg.model exists\n    if (!msg.model) {\n        msg.permutations = {\n            success: false,\n            error: \"msg.model is required\"\n        };\n        return msg;\n    }\n\n    const jukeboxData = global.get('jukeboxData');\n    const targetModel = msg.model;\n    const permutations = {};\n    let modelData = null;\n    let brandName = null;\n\n    // Find the specified model\n    for (const [brand, brandData] of Object.entries(jukeboxData)) {\n        if (brandData.models && brandData.models[targetModel]) {\n            brandName = brand;\n            modelData = brandData.models[targetModel];\n            break;\n        }\n    }\n\n    // Check if model exists\n    if (!modelData) {\n        msg.permutations = {\n            success: false,\n            error: `Model ${targetModel} not found`\n        };\n        return msg;\n    }\n\n    if (!modelData.selection) {\n        msg.permutations = {\n            success: false,\n            error: `Model ${targetModel} has no selection data`\n        };\n        return msg;\n    }\n\n    const selection = modelData.selection;\n    const levels = Object.keys(selection).sort((a, b) => Number(a) - Number(b));\n\n    if (levels.length === 0) {\n        msg.permutations = {\n            success: false,\n            error: `Model ${targetModel} has no selection levels`\n        };\n        return msg;\n    }\n\n    // Get valid options for each level\n    const levelOptions = [];\n    for (const level of levels) {\n        const options = Object.keys(selection[level]).sort();\n        levelOptions.push(options);\n    }\n\n    // Generate all valid permutations for this model\n    const modelSequences = [];\n\n    // Recursive function to generate all combinations\n    function generateCombinations(index, current) {\n        if (index === levelOptions.length) {\n            modelSequences.push(current);\n            return;\n        }\n\n        for (const option of levelOptions[index]) {\n            generateCombinations(index + 1, current + option);\n        }\n    }\n\n    generateCombinations(0, \"\");\n\n    // Build result structure\n    permutations[brandName] = {};\n    permutations[brandName][targetModel] = {\n        count: modelSequences.length\n    };\n\n    // Return results\n    msg.permutations = {\n        success: true,\n        data: permutations\n    };\n\n    msg.playlist = modelSequences;\n\n    return msg;\n\n} catch (error) {\n    msg.permutations = {\n        success: false,\n        error: `An error occurred: ${error.message}`\n    };\n    return msg;\n}",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 680,
-        "y": 460,
-        "wires": [
-            [
-                "16358cc7d829ca19"
-            ]
-        ]
-    },
-    {
-        "id": "16358cc7d829ca19",
-        "type": "split",
-        "z": "c8fe70a7b946a093",
-        "name": "Split Playlist",
-        "splt": "\\n",
-        "spltType": "str",
-        "arraySplt": 1,
-        "arraySpltType": "len",
-        "stream": false,
-        "addname": "",
-        "property": "playlist",
-        "x": 910,
-        "y": 460,
-        "wires": [
-            [
-                "4ecd9669724b9ee2"
-            ]
-        ]
-    },
-    {
-        "id": "4ecd9669724b9ee2",
-        "type": "function",
-        "z": "c8fe70a7b946a093",
-        "name": "Re-format Data",
-        "func": "msg.selection=msg.playlist\nmsg.mode = \"single\"\ndelete msg.permutations \ndelete msg.playlist \ndelete msg.parts \nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1100,
-        "y": 460,
-        "wires": [
-            [
-                "816b44b87d8fbb7c",
-                "2a3df256abf2d178"
-            ]
-        ]
-    },
-    {
         "id": "fdcf6fff3d42db3e",
         "type": "delay",
         "z": "c8fe70a7b946a093",
-        "name": "",
+        "name": "Limit Messages",
         "pauseType": "rate",
         "timeout": "5",
         "timeoutUnits": "seconds",
@@ -237,61 +64,11 @@
         "drop": false,
         "allowrate": true,
         "outputs": 1,
-        "x": 1100,
-        "y": 400,
+        "x": 860,
+        "y": 300,
         "wires": [
             [
                 "2a3df256abf2d178"
-            ]
-        ]
-    },
-    {
-        "id": "973200f73e90c3cc",
-        "type": "function",
-        "z": "c8fe70a7b946a093",
-        "name": "Random Generator",
-        "func": "try {\n    \n    // Validate msg.model exists\n    if (!msg.model) {\n        msg.permutations = {\n            success: false,\n            error: \"msg.model is required\"\n        };\n        return msg;\n    }\n\n    const jukeboxData = global.get('jukeboxData');\n    const targetModel = msg.model;\n    const permutations = {};\n    let modelData = null;\n    let brandName = null;\n\n    // Find the specified model\n    for (const [brand, brandData] of Object.entries(jukeboxData)) {\n        if (brandData.models && brandData.models[targetModel]) {\n            brandName = brand;\n            modelData = brandData.models[targetModel];\n            break;\n        }\n    }\n\n    // Check if model exists\n    if (!modelData) {\n        msg.permutations = {\n            success: false,\n            error: `Model ${targetModel} not found`\n        };\n        return msg;\n    }\n\n    if (!modelData.selection) {\n        msg.permutations = {\n            success: false,\n            error: `Model ${targetModel} has no selection data`\n        };\n        return msg;\n    }\n\n    const selection = modelData.selection;\n    const levels = Object.keys(selection).sort((a, b) => Number(a) - Number(b));\n\n    if (levels.length === 0) {\n        msg.permutations = {\n            success: false,\n            error: `Model ${targetModel} has no selection levels`\n        };\n        return msg;\n    }\n\n    // Get valid options for each level\n    const levelOptions = [];\n    for (const level of levels) {\n        const options = Object.keys(selection[level]).sort();\n        levelOptions.push(options);\n    }\n\n    // Generate all valid permutations for this model\n    const modelSequences = [];\n\n    // Recursive function to generate all combinations\n    function generateCombinations(index, current) {\n        if (index === levelOptions.length) {\n            modelSequences.push(current);\n            return;\n        }\n\n        for (const option of levelOptions[index]) {\n            generateCombinations(index + 1, current + option);\n        }\n    }\n\n    generateCombinations(0, \"\");\n\n    // Fisher-Yates shuffle algorithm to randomize the array\n    function shuffleArray(array) {\n        const shuffled = [...array]; // Create a copy\n        for (let i = shuffled.length - 1; i > 0; i--) {\n            const j = Math.floor(Math.random() * (i + 1));\n            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];\n        }\n        return shuffled;\n    }\n\n    // Randomize the sequences\n    const randomizedSequences = shuffleArray(modelSequences);\n\n    // Build result structure\n    permutations[brandName] = {};\n    permutations[brandName][targetModel] = {\n        count: randomizedSequences.length\n    };\n\n    // Return results\n    msg.permutations = {\n        success: true,\n        data: permutations\n    };\n\n    msg.playlist = randomizedSequences;\n\n    return msg;\n\n} catch (error) {\n    msg.permutations = {\n        success: false,\n        error: `An error occurred: ${error.message}`\n    };\n    return msg;\n}",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 670,
-        "y": 520,
-        "wires": [
-            [
-                "16358cc7d829ca19"
-            ]
-        ]
-    },
-    {
-        "id": "b27b6b585e6a1f1a",
-        "type": "inject",
-        "z": "c8fe70a7b946a093",
-        "name": "Random",
-        "props": [
-            {
-                "p": "model",
-                "v": "",
-                "vt": "str"
-            },
-            {
-                "p": "mode",
-                "v": "random",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 120,
-        "y": 180,
-        "wires": [
-            [
-                "600884ef3fc39f5a"
             ]
         ]
     },
@@ -307,27 +84,11 @@
         "sendError": false,
         "encoding": "utf8",
         "allProps": false,
-        "x": 660,
-        "y": 300,
+        "x": 840,
+        "y": 60,
         "wires": [
             [
-                "c8a0dc1d0756b85c"
-            ]
-        ]
-    },
-    {
-        "id": "c8a0dc1d0756b85c",
-        "type": "json",
-        "z": "c8fe70a7b946a093",
-        "name": "Convert File Contents To JSON",
-        "property": "payload",
-        "action": "",
-        "pretty": true,
-        "x": 890,
-        "y": 300,
-        "wires": [
-            [
-                "7d8a47356596ed4f"
+                "79ea5306362d9155"
             ]
         ]
     },
@@ -343,46 +104,11 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1140,
-        "y": 300,
+        "x": 1300,
+        "y": 60,
         "wires": [
             [
                 "56842ddf18c41bb5"
-            ]
-        ]
-    },
-    {
-        "id": "481c1faa2dbb2fd9",
-        "type": "inject",
-        "z": "c8fe70a7b946a093",
-        "name": "Playlist",
-        "props": [
-            {
-                "p": "model",
-                "v": "",
-                "vt": "str"
-            },
-            {
-                "p": "mode",
-                "v": "playlist",
-                "vt": "str"
-            },
-            {
-                "p": "playlist",
-                "v": "",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 110,
-        "y": 220,
-        "wires": [
-            [
-                "7a2bdb26d2a37fb6"
             ]
         ]
     },
@@ -403,8 +129,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 420,
-        "y": 100,
+        "x": 140,
+        "y": 140,
         "wires": [
             [
                 "399f055406ac68ae"
@@ -423,8 +149,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 620,
-        "y": 100,
+        "x": 380,
+        "y": 140,
         "wires": [
             [
                 "9502699f0f7872d4"
@@ -444,8 +170,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 820,
-        "y": 100,
+        "x": 600,
+        "y": 140,
         "wires": []
     },
     {
@@ -459,98 +185,14 @@
             "7a2bdb26d2a37fb6",
             "55091995478ea561",
             "816b44b87d8fbb7c",
-            "56842ddf18c41bb5"
+            "56842ddf18c41bb5",
+            "045ae53afddec999"
         ],
-        "x": 95,
-        "y": 300,
+        "x": 45,
+        "y": 60,
         "wires": [
             [
-                "387122cda5e872ed"
-            ]
-        ]
-    },
-    {
-        "id": "6414e28ebba71050",
-        "type": "link out",
-        "z": "c8fe70a7b946a093",
-        "name": "Start Single",
-        "mode": "link",
-        "links": [
-            "21c3e2488c737432"
-        ],
-        "x": 215,
-        "y": 100,
-        "wires": []
-    },
-    {
-        "id": "55091995478ea561",
-        "type": "link out",
-        "z": "c8fe70a7b946a093",
-        "name": "Start Sequential",
-        "mode": "link",
-        "links": [
-            "21c3e2488c737432"
-        ],
-        "x": 215,
-        "y": 140,
-        "wires": []
-    },
-    {
-        "id": "600884ef3fc39f5a",
-        "type": "link out",
-        "z": "c8fe70a7b946a093",
-        "name": "Start Random",
-        "mode": "link",
-        "links": [
-            "21c3e2488c737432"
-        ],
-        "x": 215,
-        "y": 180,
-        "wires": []
-    },
-    {
-        "id": "7a2bdb26d2a37fb6",
-        "type": "link out",
-        "z": "c8fe70a7b946a093",
-        "name": "Start Playlist",
-        "mode": "link",
-        "links": [
-            "21c3e2488c737432"
-        ],
-        "x": 215,
-        "y": 220,
-        "wires": []
-    },
-    {
-        "id": "816b44b87d8fbb7c",
-        "type": "link out",
-        "z": "c8fe70a7b946a093",
-        "name": "Start List As Singles",
-        "mode": "link",
-        "links": [
-            "21c3e2488c737432"
-        ],
-        "x": 1275,
-        "y": 520,
-        "wires": []
-    },
-    {
-        "id": "642dc4cf0ec2fa69",
-        "type": "function",
-        "z": "c8fe70a7b946a093",
-        "name": "Set Defaults",
-        "func": "try {\n    // Get the jukebox config from global context\n    const jukeboxConfig = global.get('jukeboxConfig');\n\n    if (!jukeboxConfig) {\n        msg.configLoader = {\n            success: false,\n            error: \"jukeboxConfig not found in global context. Ensure config file was loaded first.\"\n        };\n        return msg;\n    }\n\n    // Populate msg.model from config if not set\n    if (!msg.model) {\n        if (!jukeboxConfig.model) {\n            msg.configLoader = {\n                success: false,\n                error: \"msg.model is not set and jukeboxConfig.model is missing\"\n            };\n            return msg;\n        }\n        msg.model = jukeboxConfig.model;\n    }\n\n    // Populate msg.mode from config if not set\n    if (!msg.mode) {\n        if (!jukeboxConfig.mode) {\n            msg.configLoader = {\n                success: false,\n                error: \"msg.mode is not set and jukeboxConfig.mode is missing\"\n            };\n            return msg;\n        }\n        msg.mode = jukeboxConfig.mode;\n    }\n\n    // Populate msg.rate from config if not set\n    if (!msg.rate) {\n        if (!jukeboxConfig.rate) {\n            msg.configLoader = {\n                success: false,\n                error: \"msg.rate is not set and jukeboxConfig.mode is missing\"\n            };\n            return msg;\n        }\n        msg.rate = jukeboxConfig.rate;\n    }\n\n    // Populate msg.playlist from config if not set\n    if (!msg.playlist) {\n        if (!jukeboxConfig.playlist) {\n            msg.configLoader = {\n                success: false,\n                error: \"msg.playlist is not set and jukeboxConfig.playlist is missing\"\n            };\n            return msg;\n        }\n        msg.playlist = jukeboxConfig.playlist;\n    }\n\n    // Return success message\n    msg.configLoader = {\n        success: true,\n        message: \"Configuration loaded successfully\",\n        model: msg.model,\n        mode: msg.mode,\n        playlist: msg.playlist,\n        rate: msg.rate,\n        timestamp: new Date().toISOString()\n    };\n\n    return msg;\n\n} catch (error) {\n    msg.configLoader = {\n        success: false,\n        error: `An unexpected error occurred: ${error.message}`\n    };\n    return msg;\n}",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 190,
-        "y": 380,
-        "wires": [
-            [
-                "487c49f5a2355bab"
+                "d00b9434885b0c32"
             ]
         ]
     },
@@ -567,8 +209,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1350,
-        "y": 460,
+        "x": 1090,
+        "y": 300,
         "wires": []
     },
     {
@@ -583,8 +225,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 230,
-        "y": 300,
+        "x": 370,
+        "y": 60,
         "wires": [
             [
                 "c1604d67053ab4ca"
@@ -609,11 +251,11 @@
         "checkall": "true",
         "repair": false,
         "outputs": 2,
-        "x": 440,
-        "y": 300,
+        "x": 620,
+        "y": 60,
         "wires": [
             [
-                "642dc4cf0ec2fa69"
+                "c5a7042d9a6efc4c"
             ],
             [
                 "f5bb88be4e43a428"
@@ -629,8 +271,8 @@
         "links": [
             "21c3e2488c737432"
         ],
-        "x": 1295,
-        "y": 300,
+        "x": 1465,
+        "y": 60,
         "wires": []
     },
     {
@@ -654,8 +296,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 410,
-        "y": 160,
+        "x": 130,
+        "y": 220,
         "wires": [
             [
                 "095d6689d96f9449"
@@ -674,11 +316,405 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 620,
-        "y": 160,
+        "x": 380,
+        "y": 220,
         "wires": [
             [
                 "9502699f0f7872d4"
+            ]
+        ]
+    },
+    {
+        "id": "1f3ac8a45ebb0b48",
+        "type": "inject",
+        "z": "c8fe70a7b946a093",
+        "name": "No request",
+        "props": [
+            {
+                "p": "request",
+                "v": "",
+                "vt": "str"
+            },
+            {
+                "p": "shuffle",
+                "v": "false",
+                "vt": "bool"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 120,
+        "y": 380,
+        "wires": [
+            [
+                "045ae53afddec999"
+            ]
+        ]
+    },
+    {
+        "id": "c5a7042d9a6efc4c",
+        "type": "function",
+        "z": "c8fe70a7b946a093",
+        "name": "Process Request To Selections",
+        "func": "try {\n    // Get the request from msg\n    let request = msg.request;\n\n    // Get jukebox data and playlists from global context\n    const jukeboxData = global.get('jukeboxData');\n    const jukeboxPlaylists = global.get('jukeboxPlaylists');\n    const jukeboxConfig = global.get('jukeboxConfig');\n\n    if (!jukeboxData) {\n        msg.selectionParser = {\n            success: false,\n            error: \"jukeboxData not found in global context\"\n        };\n        return msg;\n    }\n\n    if (!jukeboxPlaylists) {\n        msg.selectionParser = {\n            success: false,\n            error: \"jukeboxPlaylists not found in global context\"\n        };\n        return msg;\n    }\n\n    if (!jukeboxConfig) {\n        msg.selectionParser = {\n            success: false,\n            error: \"jukeboxConfig not found in global context\"\n        };\n        return msg;\n    }\n\n    // If request is null/undefined, use default_request from config\n    if (!request && jukeboxConfig && jukeboxConfig.default_request) {\n        request = jukeboxConfig.default_request;\n    }\n\n    // Generate 'All' array from model selection structure\n    let allSelections = [];\n    let model = msg.model;\n\n    if (!model) {\n        if (jukeboxConfig && jukeboxConfig.model) {\n            model = jukeboxConfig.model;\n        }\n    }\n\n    if (!model) {\n        msg.selectionParser = {\n            success: false,\n            error: \"msg.model is required\"\n        };\n        return msg;\n    }\n\n    // Find the model in jukeboxData\n    let modelData = null;\n    for (const [brand, brandData] of Object.entries(jukeboxData)) {\n        if (brandData.models && brandData.models[model]) {\n            modelData = brandData.models[model];\n            break;\n        }\n    }\n\n    if (!modelData || !modelData.selection) {\n        msg.selectionParser = {\n            success: false,\n            error: `Model ${model} not found in jukeboxData or has no selection data`\n        };\n        return msg;\n    }\n\n    // Generate all possible values from the model's selection structure\n    const selection = modelData.selection;\n    const levels = Object.keys(selection).sort((a, b) => Number(a) - Number(b));\n\n    if (levels.length === 0) {\n        msg.selectionParser = {\n            success: false,\n            error: `Model ${model} has no selection levels`\n        };\n        return msg;\n    }\n\n    // Get options for each level\n    const levelOptions = [];\n    for (const level of levels) {\n        const options = Object.keys(selection[level]).sort();\n        levelOptions.push(options);\n    }\n\n    // Generate all combinations (as strings to support alphanumeric)\n    function generateCombinations(index, current) {\n        if (index === levelOptions.length) {\n            allSelections.push(current);\n            return;\n        }\n\n        for (const option of levelOptions[index]) {\n            generateCombinations(index + 1, current + option);\n        }\n    }\n\n    generateCombinations(0, \"\");\n\n    let selections = [];\n    let source = 'unknown';\n\n    // Case 1: Request is unset or 'All'\n    if (request.toLowerCase() === 'all') {\n        selections = allSelections;\n        source = 'all';\n    }\n    // Case 2: Request matches a playlist name\n    else if (jukeboxPlaylists[request]) {\n        const playlistSelections = jukeboxPlaylists[request];\n        if (Array.isArray(playlistSelections)) {\n            // Convert playlistSelections to strings for comparison\n            const playlistStrings = playlistSelections.map(sel => String(sel));\n            // Filter to only include selections that are in the allSelections array\n            selections = playlistStrings.filter(sel => allSelections.includes(sel));\n            source = 'playlist';\n        } else {\n            msg.selectionParser = {\n                success: false,\n                error: `Playlist ${request} does not contain a valid array`\n            };\n            return msg;\n        }\n    }\n    // Case 3: Parse as comma-separated list\n    else {\n        const parsed = request.split(',').map(item => {\n            const trimmed = item.trim();\n            if (trimmed === '') {\n                return null; // Skip empty values\n            }\n            return trimmed;\n        }).filter(item => item !== null); // Remove nulls\n\n        // Filter to only include selections that are in the allSelections array\n        selections = parsed.filter(sel => allSelections.includes(sel));\n        source = 'csv';\n    }\n\n    // Set the selections result\n    msg.selections = selections;\n\n    msg.selectionParser = {\n        success: true,\n        source: source,\n        model: model,\n        count: selections.length,\n        allCount: allSelections.length\n    };\n\n    return msg;\n\n} catch (error) {\n    msg.selectionParser = {\n        success: false,\n        error: `An unexpected error occurred: ${error.message}`\n    };\n    return msg;\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 910,
+        "y": 140,
+        "wires": [
+            [
+                "5f715e31a7036605"
+            ]
+        ]
+    },
+    {
+        "id": "f307fc96ff6777f2",
+        "type": "inject",
+        "z": "c8fe70a7b946a093",
+        "name": "One request",
+        "props": [
+            {
+                "p": "request",
+                "v": "100",
+                "vt": "str"
+            },
+            {
+                "p": "shuffle",
+                "v": "false",
+                "vt": "bool"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 130,
+        "y": 440,
+        "wires": [
+            [
+                "045ae53afddec999"
+            ]
+        ]
+    },
+    {
+        "id": "554197eb44972d9d",
+        "type": "inject",
+        "z": "c8fe70a7b946a093",
+        "name": "Two requests",
+        "props": [
+            {
+                "p": "request",
+                "v": "100,190",
+                "vt": "str"
+            },
+            {
+                "p": "shuffle",
+                "v": "false",
+                "vt": "bool"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 130,
+        "y": 500,
+        "wires": [
+            [
+                "045ae53afddec999"
+            ]
+        ]
+    },
+    {
+        "id": "73cb41daf85ebdcc",
+        "type": "inject",
+        "z": "c8fe70a7b946a093",
+        "name": "Two requests and bad item",
+        "props": [
+            {
+                "p": "request",
+                "v": "100,190,abc",
+                "vt": "str"
+            },
+            {
+                "p": "shuffle",
+                "v": "false",
+                "vt": "bool"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 170,
+        "y": 560,
+        "wires": [
+            [
+                "045ae53afddec999"
+            ]
+        ]
+    },
+    {
+        "id": "580a2c34a4aac790",
+        "type": "inject",
+        "z": "c8fe70a7b946a093",
+        "name": "One big bad",
+        "props": [
+            {
+                "p": "request",
+                "v": "dfwuydfgyfguy",
+                "vt": "str"
+            },
+            {
+                "p": "shuffle",
+                "v": "false",
+                "vt": "bool"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 130,
+        "y": 620,
+        "wires": [
+            [
+                "045ae53afddec999"
+            ]
+        ]
+    },
+    {
+        "id": "c94a1feca65ead78",
+        "type": "inject",
+        "z": "c8fe70a7b946a093",
+        "name": "Playlist",
+        "props": [
+            {
+                "p": "request",
+                "v": "80s Pop Hits",
+                "vt": "str"
+            },
+            {
+                "p": "shuffle",
+                "v": "false",
+                "vt": "bool"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 110,
+        "y": 680,
+        "wires": [
+            [
+                "045ae53afddec999"
+            ]
+        ]
+    },
+    {
+        "id": "8492b3114d1bfb1a",
+        "type": "inject",
+        "z": "c8fe70a7b946a093",
+        "name": "All",
+        "props": [
+            {
+                "p": "request",
+                "v": "All",
+                "vt": "str"
+            },
+            {
+                "p": "shuffle",
+                "v": "false",
+                "vt": "bool"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 110,
+        "y": 740,
+        "wires": [
+            [
+                "045ae53afddec999"
+            ]
+        ]
+    },
+    {
+        "id": "5f715e31a7036605",
+        "type": "function",
+        "z": "c8fe70a7b946a093",
+        "name": "Shuffle If Requested",
+        "func": "try {\n    // Validate msg.selections exists\n    if (!msg.selections || !Array.isArray(msg.selections)) {\n        msg.shuffle = {\n            success: false,\n            error: \"msg.selections is required and must be an array\"\n        };\n        return msg;\n    }\n\n    const shuffle = msg.shuffle === true || msg.shuffle === 'true';\n    let result = msg.selections;\n\n    if (shuffle) {\n        // Fisher-Yates shuffle algorithm\n        function fisherYatesShuffle(array) {\n            const shuffled = [...array]; // Create a copy\n            for (let i = shuffled.length - 1; i > 0; i--) {\n                const j = Math.floor(Math.random() * (i + 1));\n                // Swap elements at positions i and j\n                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];\n            }\n            return shuffled;\n        }\n\n        result = fisherYatesShuffle(msg.selections);\n\n        msg.shuffle = {\n            success: true,\n            shuffled: true,\n            count: result.length,\n            timestamp: new Date().toISOString()\n        };\n    } else {\n        msg.shuffle = {\n            success: true,\n            shuffled: false,\n            count: result.length,\n            timestamp: new Date().toISOString()\n        };\n    }\n\n    msg.selections = result;\n\n    return msg;\n\n} catch (error) {\n    msg.shuffle = {\n        success: false,\n        error: `An unexpected error occurred: ${error.message}`\n    };\n    return msg;\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1200,
+        "y": 140,
+        "wires": [
+            [
+                "58f0d2c2d6f93def"
+            ]
+        ]
+    },
+    {
+        "id": "521ec1d855e7e7d7",
+        "type": "inject",
+        "z": "c8fe70a7b946a093",
+        "name": "Shuffled Playlist",
+        "props": [
+            {
+                "p": "request",
+                "v": "80s Pop Hits",
+                "vt": "str"
+            },
+            {
+                "p": "shuffle",
+                "v": "true",
+                "vt": "bool"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 140,
+        "y": 800,
+        "wires": [
+            [
+                "045ae53afddec999"
+            ]
+        ]
+    },
+    {
+        "id": "58f0d2c2d6f93def",
+        "type": "split",
+        "z": "c8fe70a7b946a093",
+        "name": "Split Selections",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "property": "selections",
+        "x": 860,
+        "y": 220,
+        "wires": [
+            [
+                "149a6de027fe32fa"
+            ]
+        ]
+    },
+    {
+        "id": "d00b9434885b0c32",
+        "type": "function",
+        "z": "c8fe70a7b946a093",
+        "name": "Start",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 170,
+        "y": 60,
+        "wires": [
+            [
+                "387122cda5e872ed"
+            ]
+        ]
+    },
+    {
+        "id": "045ae53afddec999",
+        "type": "link out",
+        "z": "c8fe70a7b946a093",
+        "name": "link out 1",
+        "mode": "link",
+        "links": [
+            "21c3e2488c737432"
+        ],
+        "x": 385,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "67ada12e6e61f6da",
+        "type": "inject",
+        "z": "c8fe70a7b946a093",
+        "name": "Queue Reset",
+        "props": [
+            {
+                "p": "reset",
+                "v": "true",
+                "vt": "bool"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 130,
+        "y": 300,
+        "wires": [
+            [
+                "fdcf6fff3d42db3e"
+            ]
+        ]
+    },
+    {
+        "id": "79ea5306362d9155",
+        "type": "json",
+        "z": "c8fe70a7b946a093",
+        "name": "Convert To JSON",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 1050,
+        "y": 60,
+        "wires": [
+            [
+                "7d8a47356596ed4f"
+            ]
+        ]
+    },
+    {
+        "id": "149a6de027fe32fa",
+        "type": "function",
+        "z": "c8fe70a7b946a093",
+        "name": "Get Artist",
+        "func": "try {\n    // Validate msg.selections exists\n    if (!msg.selections || !Array.isArray(msg.selections)) {\n        msg.catalogLookup = {\n            success: false,\n            error: \"msg.selections is required and must be an array\"\n        };\n        return msg;\n    }\n\n    // Get jukeboxCatalog from global context\n    const jukeboxCatalog = global.get('jukeboxCatalog');\n\n    if (!jukeboxCatalog) {\n        msg.catalogLookup = {\n            success: false,\n            error: \"jukeboxCatalog not found in global context\"\n        };\n        return msg;\n    }\n\n    // Look up each selection in the catalog\n    const catalog = [];\n    let foundCount = 0;\n    let notFoundCount = 0;\n\n    for (const selection of msg.selections) {\n        const selectionKey = String(selection);\n\n        if (jukeboxCatalog[selectionKey]) {\n            catalog.push({\n                selection: selectionKey,\n                ...jukeboxCatalog[selectionKey]\n            });\n            foundCount++;\n        } else {\n            // Selection not found in catalog - skip or add placeholder\n            catalog.push({\n                selection: selectionKey,\n                artist: \"Unknown\",\n                title: \"Unknown\",\n                duration: \"0:00\"\n            });\n            notFoundCount++;\n        }\n    }\n\n    // Set the catalog result\n    msg.catalog = catalog;\n\n    msg.catalogLookup = {\n        success: true,\n        totalSelections: msg.selections.length,\n        foundInCatalog: foundCount,\n        notFoundInCatalog: notFoundCount,\n        timestamp: new Date().toISOString()\n    };\n\n    return msg;\n\n} catch (error) {\n    msg.catalogLookup = {\n        success: false,\n        error: `An unexpected error occurred: ${error.message}`\n    };\n    return msg;\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 220,
+        "wires": [
+            [
+                "2bc0b6d6993d8060"
             ]
         ]
     }

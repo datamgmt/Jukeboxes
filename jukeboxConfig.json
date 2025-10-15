@@ -1,6 +1,5 @@
 {
-  "mode": "single",
   "model": "459-100",
-  "playlist": "80s Pop Hits",
-  "rate": 210000
+  "rate": 210000,
+  "default_request": "80s Pop Hits"
 }
