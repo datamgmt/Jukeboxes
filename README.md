@@ -36,4 +36,6 @@ The list below is what I used -
 
 * An electro-mechanical Jukebox 
 * A Raspberry Pi 
-* A USB 
+* [LiNKFOR Passive Stereo Mixer](https://www.amazon.co.uk/LiNKFOR-Passive-Stereo-Mixer-Gold-Plated/dp/B0FHQ8PKBY)
+
+
