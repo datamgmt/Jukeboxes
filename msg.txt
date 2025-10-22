@@ -1,0 +1,7 @@
+    msg.loadGlobals = {
+        success: true,
+        message: "All required configuration files are loaded",
+        ...loadedFiles,
+        error: "",
+        timestamp: new Date().toISOString()
+    };

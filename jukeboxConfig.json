@@ -1,5 +1,5 @@
 {
   "model": "459-100",
-  "rate": 210000,
+  "default_rate": "3:30",
   "default_request": "80s Pop Hits"
 }

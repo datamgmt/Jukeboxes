@@ -43,7 +43,7 @@
         "y": 220,
         "wires": [
             [
-                "fdcf6fff3d42db3e"
+                "1398917f8ae8b55b"
             ]
         ]
     },
@@ -51,12 +51,12 @@
         "id": "fdcf6fff3d42db3e",
         "type": "delay",
         "z": "c8fe70a7b946a093",
-        "name": "Limit Messages",
+        "name": "Limit Selections ",
         "pauseType": "rate",
         "timeout": "5",
         "timeoutUnits": "seconds",
         "rate": "1",
-        "nbRateUnits": "10",
+        "nbRateUnits": "30",
         "rateUnits": "second",
         "randomFirst": "1",
         "randomLast": "5",
@@ -68,7 +68,8 @@
         "y": 300,
         "wires": [
             [
-                "2a3df256abf2d178"
+                "2c7c34bca778a92a",
+                "29a7c26cfc981268"
             ]
         ]
     },
@@ -142,7 +143,7 @@
         "type": "function",
         "z": "c8fe70a7b946a093",
         "name": "Load Configs",
-        "func": "msg.jukeboxData = global.get('jukeboxData');\nmsg.jukeboxCatalog = global.get('jukeboxCatalog');\nmsg.jukeboxConfig = global.get('jukeboxConfig');\nmsg.jukeboxPlaylists = global.get('jukeboxPlaylists');\nreturn msg;",
+        "func": "msg.jukeboxData = global.get('jukeboxData');\nmsg.jukeboxCatalog = global.get('jukeboxCatalog');\nmsg.jukeboxConfig = global.get('jukeboxConfig');\nmsg.jukeboxPlaylists = global.get('jukeboxPlaylists');\n\nmsg.loadConfigs = {\n    success: true,\n    message: \"All configuration files are in the message\",\n    error: \"\",\n    timestamp: new Date().toISOString()\n};\n\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -186,7 +187,9 @@
             "55091995478ea561",
             "816b44b87d8fbb7c",
             "56842ddf18c41bb5",
-            "045ae53afddec999"
+            "045ae53afddec999",
+            "a6c636ce71e692d6",
+            "1bc31ccd4e46ae94"
         ],
         "x": 45,
         "y": 60,
@@ -209,8 +212,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1090,
-        "y": 300,
+        "x": 1050,
+        "y": 400,
         "wires": []
     },
     {
@@ -218,7 +221,7 @@
         "type": "function",
         "z": "c8fe70a7b946a093",
         "name": "Load Globals",
-        "func": "try {\n    // Configuration - Edit these paths to match your file locations\n    const config = [\n        {\n            globalKey: 'jukeboxData',\n            filePath: '/home/pi/jukebox/jukeboxData.json'\n        },\n        {\n            globalKey: 'jukeboxCatalog',\n            filePath: '/home/pi/jukebox/jukeboxCatalog.json'\n        },\n        {\n            globalKey: 'jukeboxConfig',\n            filePath: '/home/pi/jukebox/jukeboxConfig.json'\n        },\n        {\n            globalKey: 'jukeboxPlaylists',\n            filePath: '/home/pi/jukebox/jukeboxPlaylists.json'\n        }\n    ];\n\n    // Check each required file\n    for (const item of config) {\n        if (!global.get(item.globalKey)) {\n            msg.filePath = item.filePath;\n            msg.globalKey = item.globalKey;\n            node.send(msg);\n            return;\n        }\n    }\n\n    // All required data is loaded\n    const loadedFiles = config.reduce((acc, item) => {\n        acc[item.globalKey] = true;\n        return acc;\n    }, {});\n\n    msg.defaultSettings = {\n        success: true,\n        message: \"All required configuration files are loaded\",\n        ...loadedFiles,\n        timestamp: new Date().toISOString()\n    };\n\n    return msg;\n\n} catch (error) {\n    msg.defaultSettings = {\n        success: false,\n        error: `An unexpected error occurred: ${error.message}`\n    };\n    return msg;\n}",
+        "func": "try {\n    // Configuration - Edit these paths to match your file locations\n    const config = [\n        {\n            globalKey: 'jukeboxData',\n            filePath: '/home/pi/jukebox/jukeboxData.json'\n        },\n        {\n            globalKey: 'jukeboxCatalog',\n            filePath: '/home/pi/jukebox/jukeboxCatalog.json'\n        },\n        {\n            globalKey: 'jukeboxConfig',\n            filePath: '/home/pi/jukebox/jukeboxConfig.json'\n        },\n        {\n            globalKey: 'jukeboxPlaylists',\n            filePath: '/home/pi/jukebox/jukeboxPlaylists.json'\n        }\n    ];\n\n    // Check each required file\n    for (const item of config) {\n        if (!global.get(item.globalKey)) {\n            msg.filePath = item.filePath;\n            msg.globalKey = item.globalKey;\n            node.send(msg);\n            return;\n        }\n    }\n\n    // All required data is loaded\n    const loadedFiles = config.reduce((acc, item) => {\n        acc[item.globalKey] = true;\n        return acc;\n    }, {});\n\n    msg.loadGlobals = {\n        success: true,\n        message: \"All required configuration files are loaded\",\n        ...loadedFiles,\n        error: \"\",\n        timestamp: new Date().toISOString()\n    };\n\n    return msg;\n\n} catch (error) {\n    msg.loadGlobals = {\n        success: false,\n        message: \"\",\n        error: `An unexpected error occurred: ${error.message}`,\n        timestamp: new Date().toISOString()\n    };\n    return msg;\n}",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -238,7 +241,7 @@
         "type": "switch",
         "z": "c8fe70a7b946a093",
         "name": "Are Globals Required?",
-        "property": "defaultSettings.success",
+        "property": "loadGlobals.success",
         "propertyType": "msg",
         "rules": [
             {
@@ -309,7 +312,7 @@
         "type": "function",
         "z": "c8fe70a7b946a093",
         "name": "Delete Configs",
-        "func": "// Delete multiple globals\nglobal.set('jukeboxData', undefined);\nglobal.set('jukeboxCatalog', undefined);\nglobal.set('jukeboxConfig', undefined);\nglobal.set('jukeboxPlaylists', undefined);\n\nmsg.deleted = {\n    success: true,\n    message: \"Global variables cleared\"\n};\n\nreturn msg;",
+        "func": "// Delete multiple globals\nglobal.set('jukeboxData', undefined);\nglobal.set('jukeboxCatalog', undefined);\nglobal.set('jukeboxConfig', undefined);\nglobal.set('jukeboxPlaylists', undefined);\n\nmsg.deleteConfigs = {\n    success: true,\n    message: \"Global variables cleared\",\n    error: \"\",\n    timestamp: new Date().toISOString()\n};\n\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -382,7 +385,7 @@
         "props": [
             {
                 "p": "request",
-                "v": "100",
+                "v": "184",
                 "vt": "str"
             },
             {
@@ -703,7 +706,7 @@
         "type": "function",
         "z": "c8fe70a7b946a093",
         "name": "Get Artist",
-        "func": "try {\n    // Validate msg.selections exists\n    if (!msg.selections || !Array.isArray(msg.selections)) {\n        msg.catalogLookup = {\n            success: false,\n            error: \"msg.selections is required and must be an array\"\n        };\n        return msg;\n    }\n\n    // Get jukeboxCatalog from global context\n    const jukeboxCatalog = global.get('jukeboxCatalog');\n\n    if (!jukeboxCatalog) {\n        msg.catalogLookup = {\n            success: false,\n            error: \"jukeboxCatalog not found in global context\"\n        };\n        return msg;\n    }\n\n    // Look up each selection in the catalog\n    const catalog = [];\n    let foundCount = 0;\n    let notFoundCount = 0;\n\n    for (const selection of msg.selections) {\n        const selectionKey = String(selection);\n\n        if (jukeboxCatalog[selectionKey]) {\n            catalog.push({\n                selection: selectionKey,\n                ...jukeboxCatalog[selectionKey]\n            });\n            foundCount++;\n        } else {\n            // Selection not found in catalog - skip or add placeholder\n            catalog.push({\n                selection: selectionKey,\n                artist: \"Unknown\",\n                title: \"Unknown\",\n                duration: \"0:00\"\n            });\n            notFoundCount++;\n        }\n    }\n\n    // Set the catalog result\n    msg.catalog = catalog;\n\n    msg.catalogLookup = {\n        success: true,\n        totalSelections: msg.selections.length,\n        foundInCatalog: foundCount,\n        notFoundInCatalog: notFoundCount,\n        timestamp: new Date().toISOString()\n    };\n\n    return msg;\n\n} catch (error) {\n    msg.catalogLookup = {\n        success: false,\n        error: `An unexpected error occurred: ${error.message}`\n    };\n    return msg;\n}",
+        "func": "try {\n    // Validate msg.selections exists\n    if (!msg.selections) {\n        msg.catalogLookup = {\n            success: false,\n            error: \"msg.selections is required\"\n        };\n        return msg;\n    }\n\n    // Get jukeboxCatalog from global context\n    const jukeboxCatalog = global.get('jukeboxCatalog');\n\n    if (!jukeboxCatalog) {\n        msg.catalogLookup = {\n            success: false,\n            error: \"jukeboxCatalog not found in global context\"\n        };\n        return msg;\n    }\n\n    // Look up the selection in the catalog\n    const selectionKey = String(msg.selections);\n\n    if (jukeboxCatalog[selectionKey]) {\n        msg.catalog = {\n            selection: selectionKey,\n            ...jukeboxCatalog[selectionKey]\n        };\n\n        msg.catalogLookup = {\n            success: true,\n            found: true,\n            timestamp: new Date().toISOString()\n        };\n    } else {\n        // Selection not found in catalog\n        msg.catalog = {\n            selection: selectionKey,\n            artist: \"Unknown\",\n            title: \"Unknown\",\n            duration: \"0:00\"\n        };\n\n        msg.catalogLookup = {\n            success: true,\n            found: false,\n            timestamp: new Date().toISOString()\n        };\n    }\n\n    return msg;\n\n    return msg;\n\n} catch (error) {\n    msg.catalogLookup = {\n        success: false,\n        error: `An unexpected error occurred: ${error.message}`\n    };\n    return msg;\n}",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -717,5 +720,351 @@
                 "2bc0b6d6993d8060"
             ]
         ]
+    },
+    {
+        "id": "d7aceb5788251e15",
+        "type": "http in",
+        "z": "c8fe70a7b946a093",
+        "name": "HTTP Request",
+        "url": "/jukebox",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 600,
+        "y": 500,
+        "wires": [
+            [
+                "4d4c643033b8a59c"
+            ]
+        ]
+    },
+    {
+        "id": "4d4c643033b8a59c",
+        "type": "function",
+        "z": "c8fe70a7b946a093",
+        "name": "Handle Http Request",
+        "func": "msg.request = msg.req.query.request;\nmsg.shuffle = msg.req.query.shuffle === \"false\"; // optional: convert to boolean\nmsg.action = msg.req.query.action;\nmsg.playlist = msg.req.query.playlist;\nmsg.playlist_name = msg.req.query.playlist_name;\n\nmsg.payload = {\n    success: true,\n    action: msg.action,\n    request: msg.request,\n    shuffle: msg.shuffle,\n    playlist: msg.playlist,\n    playlist_name: msg.playlist_name\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 840,
+        "y": 500,
+        "wires": [
+            [
+                "3b84bcf4d8e8d812"
+            ]
+        ]
+    },
+    {
+        "id": "add6a7bf8f108edb",
+        "type": "http response",
+        "z": "c8fe70a7b946a093",
+        "name": "HTTP Return",
+        "statusCode": "200",
+        "headers": {},
+        "x": 1390,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "3b84bcf4d8e8d812",
+        "type": "switch",
+        "z": "c8fe70a7b946a093",
+        "name": "Select Action",
+        "property": "action",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "selection",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "reset",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "playlists",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "playlist_entries",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 4,
+        "x": 590,
+        "y": 640,
+        "wires": [
+            [
+                "1bc31ccd4e46ae94",
+                "add6a7bf8f108edb"
+            ],
+            [
+                "c55a4fd64c5b980d"
+            ],
+            [
+                "5f0132c2317c1fdc"
+            ],
+            [
+                "c58645b24301b4c4"
+            ]
+        ]
+    },
+    {
+        "id": "9c62cf0cf5130b26",
+        "type": "link in",
+        "z": "c8fe70a7b946a093",
+        "name": "Reset Link",
+        "links": [
+            "71cc3cc4f4a19aec",
+            "2856341f7dc63a70"
+        ],
+        "x": 725,
+        "y": 340,
+        "wires": [
+            [
+                "fdcf6fff3d42db3e"
+            ]
+        ]
+    },
+    {
+        "id": "c55a4fd64c5b980d",
+        "type": "function",
+        "z": "c8fe70a7b946a093",
+        "name": "Set Reset Flag",
+        "func": "msg.reset = true\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 940,
+        "y": 660,
+        "wires": [
+            [
+                "add6a7bf8f108edb",
+                "2856341f7dc63a70"
+            ]
+        ]
+    },
+    {
+        "id": "5f0132c2317c1fdc",
+        "type": "function",
+        "z": "c8fe70a7b946a093",
+        "name": "Get Playlists",
+        "func": "try {\n    // Check if jukeboxPlaylists is loaded\n    let jukeboxPlaylists = global.get('jukeboxPlaylists');\n\n    if (!jukeboxPlaylists) {\n        // Not loaded - send message to load it\n        msg.payload = '/home/pi/jukebox/jukeboxPlaylists.json';\n        msg.topic = 'jukeboxPlaylists';\n        msg.playlistList = {\n            success: false,\n            error: \"jukeboxPlaylists not loaded - requesting load\",\n            action: \"load_requested\"\n        };\n        node.send(msg);\n        return;\n    }\n\n    // Get list of playlist names\n    const playlistNames = Object.keys(jukeboxPlaylists);\n\n    // Set the payload as a simple array of names\n    msg.payload = playlistNames;\n\n    msg.playlistList = {\n        success: true,\n        count: playlistNames.length,\n        timestamp: new Date().toISOString()\n    };\n  \n    return msg;\n\n} catch (error) {\n    msg.playlistList = {\n        success: false,\n        error: `An unexpected error occurred: ${error.message}`\n    };\n    return msg;\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 930,
+        "y": 740,
+        "wires": [
+            [
+                "add6a7bf8f108edb",
+                "37000f12daa89a94"
+            ]
+        ]
+    },
+    {
+        "id": "c58645b24301b4c4",
+        "type": "function",
+        "z": "c8fe70a7b946a093",
+        "name": "Get Playlist Entries",
+        "func": "try {\n    // Validate msg.playlist_name exists\n    if (!msg.playlist_name) {\n        msg.playlistEntries = {\n            success: false,\n            error: \"msg.playlist_name is required\"\n        };\n        return msg;\n    }\n\n    // Get jukeboxPlaylists and jukeboxCatalog from global context\n    const jukeboxPlaylists = global.get('jukeboxPlaylists');\n    const jukeboxCatalog = global.get('jukeboxCatalog');\n\n    if (!jukeboxPlaylists) {\n        msg.playlistEntries = {\n            success: false,\n            error: \"jukeboxPlaylists not found in global context\"\n        };\n        return msg;\n    }\n\n    if (!jukeboxCatalog) {\n        msg.playlistEntries = {\n            success: false,\n            error: \"jukeboxCatalog not found in global context\"\n        };\n        return msg;\n    }\n\n    // Get the playlist\n    const playlistName = msg.playlist_name;\n    const playlist = jukeboxPlaylists[playlistName];\n\n    if (!playlist) {\n        msg.playlistEntries = {\n            success: false,\n            error: `Playlist '${playlistName}' not found`\n        };\n        return msg;\n    }\n\n    if (!Array.isArray(playlist)) {\n        msg.playlistEntries = {\n            success: false,\n            error: `Playlist '${playlistName}' is not a valid array`\n        };\n        return msg;\n    }\n\n    // Build array of entries with catalog info\n    const entries = [];\n\n    for (const selection of playlist) {\n        const selectionKey = String(selection);\n\n        if (jukeboxCatalog[selectionKey]) {\n            entries.push({\n                selection: selectionKey,\n                artist: jukeboxCatalog[selectionKey].artist,\n                title: jukeboxCatalog[selectionKey].title,\n                duration: jukeboxCatalog[selectionKey].duration\n            });\n        } else {\n            // Selection not in catalog\n            entries.push({\n                selection: selectionKey,\n                artist: \"Unknown\",\n                title: \"Unknown\",\n                duration: \"0:00\"\n            });\n        }\n    }\n\n    // Set the payload\n    msg.payload = entries;\n\n    msg.playlistEntries = {\n        success: true,\n        playlistName: playlistName,\n        count: entries.length,\n        timestamp: new Date().toISOString()\n    };\n\n    return msg;\n\n} catch (error) {\n    msg.playlistEntries = {\n        success: false,\n        error: `An unexpected error occurred: ${error.message}`\n    };\n    return msg;\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 950,
+        "y": 820,
+        "wires": [
+            [
+                "add6a7bf8f108edb",
+                "37000f12daa89a94"
+            ]
+        ]
+    },
+    {
+        "id": "772a6ecd815cd9a1",
+        "type": "link in",
+        "z": "c8fe70a7b946a093",
+        "name": "Debug Entire Message",
+        "links": [
+            "37000f12daa89a94",
+            "29a7c26cfc981268",
+            "594602675dc4e329"
+        ],
+        "x": 725,
+        "y": 400,
+        "wires": [
+            [
+                "2a3df256abf2d178"
+            ]
+        ]
+    },
+    {
+        "id": "1bc31ccd4e46ae94",
+        "type": "link out",
+        "z": "c8fe70a7b946a093",
+        "name": "link out 2",
+        "mode": "link",
+        "links": [
+            "21c3e2488c737432"
+        ],
+        "x": 1075,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "37000f12daa89a94",
+        "type": "link out",
+        "z": "c8fe70a7b946a093",
+        "name": "link out 3",
+        "mode": "link",
+        "links": [
+            "772a6ecd815cd9a1"
+        ],
+        "x": 1075,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "2856341f7dc63a70",
+        "type": "link out",
+        "z": "c8fe70a7b946a093",
+        "name": "link out 4",
+        "mode": "link",
+        "links": [
+            "9c62cf0cf5130b26"
+        ],
+        "x": 1075,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "1398917f8ae8b55b",
+        "type": "function",
+        "z": "c8fe70a7b946a093",
+        "name": "Add Rate in ms",
+        "func": "try {\n    const MIN_SECONDS = 30;\n    const MAX_SECONDS = 390; // 6 minutes 30 seconds\n\n    // Function to parse duration string to seconds\n    function parseToSeconds(value) {\n        if (!value) return null;\n\n        const str = String(value).trim();\n\n        // Check if it's in MM:SS format\n        if (str.includes(':')) {\n            const parts = str.split(':');\n            if (parts.length !== 2) return null;\n\n            const minutes = parseInt(parts[0], 10);\n            const seconds = parseInt(parts[1], 10);\n\n            if (isNaN(minutes) || isNaN(seconds)) return null;\n            if (seconds < 0 || seconds >= 60) return null;\n\n            return (minutes * 60) + seconds;\n        } else {\n            // It's just seconds\n            const seconds = parseInt(str, 10);\n            if (isNaN(seconds)) return null;\n            return seconds;\n        }\n    }\n\n    // Function to validate if seconds are in range\n    function isValidRange(seconds) {\n        if (seconds === null || seconds === undefined) return false;\n        return seconds >= MIN_SECONDS && seconds <= MAX_SECONDS;\n    }\n\n    // Get jukeboxConfig\n    const jukeboxConfig = global.get('jukeboxConfig');\n\n    let finalSeconds = null;\n\n    // Try to use msg.catalog.duration first\n    if (msg.catalog && msg.catalog.duration) {\n        const catalogSeconds = parseToSeconds(msg.catalog.duration);\n        if (isValidRange(catalogSeconds)) {\n            finalSeconds = catalogSeconds;\n        }\n    }\n\n    // If catalog duration is not valid, try default_rate from config\n    if (finalSeconds === null && jukeboxConfig && jukeboxConfig.default_rate) {\n        const defaultSeconds = parseToSeconds(jukeboxConfig.default_rate);\n        if (isValidRange(defaultSeconds)) {\n            finalSeconds = defaultSeconds;\n        }\n    }\n\n    // Set msg.rate if we have a valid value, otherwise delete it\n    if (finalSeconds !== null) {\n        msg.rate = finalSeconds * 1000; // Convert to milliseconds\n\n        msg.rateCalculator = {\n            success: true,\n            seconds: finalSeconds,\n            milliseconds: msg.rate,\n            source: (msg.catalog && msg.catalog.duration && parseToSeconds(msg.catalog.duration) === finalSeconds) ? 'catalog' : 'default',\n            timestamp: new Date().toISOString()\n        };\n    } else {\n        delete msg.rate;\n\n        msg.rateCalculator = {\n            success: false,\n            error: \"No valid rate found in catalog.duration or config.default_rate\",\n            timestamp: new Date().toISOString()\n        };\n    }\n\n    return msg;\n\n} catch (error) {\n    delete msg.rate;\n    msg.rateCalculator = {\n        success: false,\n        error: `An unexpected error occurred: ${error.message}`\n    };\n    return msg;\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1640,
+        "y": 220,
+        "wires": [
+            [
+                "fdcf6fff3d42db3e"
+            ]
+        ]
+    },
+    {
+        "id": "2c7c34bca778a92a",
+        "type": "function",
+        "z": "c8fe70a7b946a093",
+        "name": "Serialize",
+        "func": "msg = {\n    payload: msg.hex.hexStrings,\n    selection: msg.catalog.selection,\n    artist: msg.catalog.artist,\n    title: msg.catalog.title,\n    duration: msg.catalog.duration \n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 300,
+        "wires": [
+            [
+                "2c52d91d899fe853"
+            ]
+        ]
+    },
+    {
+        "id": "2c52d91d899fe853",
+        "type": "split",
+        "z": "c8fe70a7b946a093",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "property": "payload",
+        "x": 1230,
+        "y": 300,
+        "wires": [
+            [
+                "eda28dd024dd0a70"
+            ]
+        ]
+    },
+    {
+        "id": "eda28dd024dd0a70",
+        "type": "delay",
+        "z": "c8fe70a7b946a093",
+        "name": "Limit Button Presses",
+        "pauseType": "rate",
+        "timeout": "8",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 1440,
+        "y": 300,
+        "wires": [
+            [
+                "594602675dc4e329"
+            ]
+        ]
+    },
+    {
+        "id": "29a7c26cfc981268",
+        "type": "link out",
+        "z": "c8fe70a7b946a093",
+        "name": "Selection Out",
+        "mode": "link",
+        "links": [
+            "772a6ecd815cd9a1"
+        ],
+        "x": 975,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "594602675dc4e329",
+        "type": "link out",
+        "z": "c8fe70a7b946a093",
+        "name": "Buttons Out",
+        "mode": "link",
+        "links": [
+            "772a6ecd815cd9a1"
+        ],
+        "x": 1625,
+        "y": 300,
+        "wires": []
     }
 ]
