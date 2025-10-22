@@ -1,6 +1,6 @@
-= The Jukebox Automation Project =
+# The Jukebox Automation Project
 
-== Bringing Vintage Jukeboxes into the Streaming Age ==
+## Bringing Vintage Jukeboxes into the Streaming Age
 
 The classic jukebox—once the centerpiece of diners and bars across America during its 1950s heyday—has found new life as a striking statement piece in modern homes. These beautiful electro-mechanical marvels, with their chrome accents, colorful lighting, and satisfying mechanical selections, combine nostalgia with undeniable visual appeal. Whether it's a gleaming Wurlitzer or a sleek Seeburg, vintage jukeboxes capture an era when choosing music was a tactile, social experience.
 
@@ -10,7 +10,7 @@ For collectors and enthusiasts who've invested in these vintage machines, this c
 
 This project bridges that gap. By retrofitting electro-mechanical jukeboxes with modern automation capabilities, we can preserve the iconic appearance and mechanical operation while adding features that today's users expect: continuous autoplay, curated playlists, access to streaming services like Spotify, and automated selection — all while maintaining the jukebox's original visual charm and mechanical character. The result is the best of both worlds: a stunning vintage centerpiece that sounds and functions like it belongs in the 21st century.
 
-== Technical Approach ==
+## Technical Approach 
 
 The retrofit centers on integrating a Raspberry Pi as the automation controller while preserving the jukebox's original functionality. 
 
