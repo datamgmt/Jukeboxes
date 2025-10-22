@@ -25,3 +25,15 @@ Several critical considerations shape the implementation.
 * Most importantly, users need intuitive control: a web-based interface accessible from any smartphone or tablet provides playlist management, streaming service integration, and autoplay configuration without requiring physical access to the jukebox.
 
 This approach maintains the jukebox's authentic appearance—visitors see only the original cabinet and controls—while modern automation works invisibly behind the scenes.
+
+## Components
+
+The following is a list of the components required to complete this project
+
+### Hardware
+
+The list below is what I used - 
+
+* An electro-mechanical Jukebox 
+* A Raspberry Pi 
+* A USB 
