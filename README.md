@@ -1,5 +1,10 @@
 # The Jukebox Automation Project
 
+> [!WARNING]
+> This project is under development and currently largely untested.
+> It is being documented as if finished but may be revised before the project is complete.
+> You are advised not to use this project until this warning is removed
+
 ## Bringing Vintage Jukeboxes into the Streaming Age
 
 The classic jukebox—once the centerpiece of diners and bars across America during its 1950s heyday—has found new life as a striking statement piece in modern homes. These beautiful electro-mechanical marvels, with their chrome accents, colorful lighting, and satisfying mechanical selections, combine nostalgia with undeniable visual appeal. Whether it's a gleaming Wurlitzer or a sleek Seeburg, vintage jukeboxes capture an era when choosing music was a tactile, social experience.
