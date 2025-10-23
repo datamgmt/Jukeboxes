@@ -42,6 +42,7 @@ This project sets out to deliver the features described above. Making modificati
 * [Raspberry Pi Security](/docs/decurity.md)
 * [WiFi Configuration](/docs/wifi-cfg.md)
 * [Adding Streaming Services](/docs/streaming.md)
+* [Modifying the audio channels])/docs/audio-mods.md)
 
 ## Additional Resources
 

@@ -21,6 +21,7 @@ The list below is what I used -
 * Raspbian or equivalent Operating System (OS) for Raspberry Pi
 * Node-Red
 * Streaming Services Software (see [Adding Streaming Services](/docs/streaming.md))
- * Raspotify 
- * Shairport Sync
- * Volumio
+  - Raspotify 
+  - Shairport Sync
+  - Volumio
+* SupTronics UPS Software
