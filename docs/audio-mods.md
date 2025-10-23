@@ -439,8 +439,6 @@ alsamixer
 │                             │
 │  INPUT 1: L● ●R (Jukebox)   │
 │  INPUT 2: L● ●R (Pi/UCA202) │
-│  INPUT 3: L● ●R (Available) │
-│  INPUT 4: L● ●R (Available) │
 │                             │
 │  OUTPUT:  L● ●R             │
 └──────────┬─────┬────────────┘
@@ -462,8 +460,8 @@ alsamixer
 │  BEHRINGER       │     ┌────────────────┐
 │  UCA202          │     │  RASPBERRY PI  │
 │                  │USB  │                │
-│  L● ●R          ├─────┤  ● USB Port    │
-└──┬────┬─────────┘     └────────────────┘
+│  L● ●R           ├─────┤  ● USB Port    │
+└──┬────┬──────────┘     └────────────────┘
    │    │
    │    │  RCA Cables
    │    │
