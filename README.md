@@ -31,6 +31,18 @@ Several critical considerations shape the implementation.
 
 This approach maintains the jukebox's authentic appearance—visitors see only the original cabinet and controls—while modern automation works invisibly behind the scenes.
 
+## User Beware
+
+This project sets out to deliver the features described above. Making modifications to a vintage Jukebox may devalue it in the eyes of others. Changes also risk damaging the machine. When adding these components try to install them in such a way that they are easily reversable changes.
+
 ## Implementation
 
-* [docs/safety]
+* [Safety First](docs/safety.md)
+* [Components Required](docs/components.md)
+* [Raspberry Pi Security](docs/decurity.md)
+* [WiFi Configuration](docs/wifi-cfg.md)
+* [Adding Streaming Services](docs/streaming.md)
+
+## Additional Resources
+
+* [Manuals](manuals)
