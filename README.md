@@ -45,7 +45,7 @@ This project sets out to deliver the features described above. Making modificati
   * [Adding Streaming Services](/docs/streaming.md)
 * [New Equipment Dry-Run](/docs/dry-run.md)
 * [Modifying the audio channels](/docs/audio-mods.md)
-* [Modifying the control buttons](/docscontrol-mods.md)
+* [Modifying the control buttons](/docs/control-mods.md)
 
 ## Additional Resources
 
