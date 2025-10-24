@@ -39,9 +39,10 @@ This project sets out to deliver the features described above. Making modificati
 
 * [Safety First](/docs/safety.md)
 * [Components Required](/docs/components.md)
-* [Raspberry Pi Security](/docs/decurity.md)
-* [WiFi Configuration](/docs/wifi-cfg.md)
-* [Adding Streaming Services](/docs/streaming.md)
+* Software
+  * [Raspberry Pi Security](/docs/decurity.md)
+  * [WiFi Configuration](/docs/wifi-cfg.md)
+  * [Adding Streaming Services](/docs/streaming.md)
 * [New Equipment Dry-Run](/docs/dry-run.md)
 * [Modifying the audio channels](/docs/audio-mods.md)
 * [Modifying the control buttons](/docscontrol-mods.md)
