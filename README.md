@@ -39,6 +39,7 @@ This project sets out to deliver the features described above. Making modificati
 
 * [Safety First](/docs/safety.md)
 * [Components Required](/docs/components.md)
+* [Is My Jukebox Suitable for This Conversion?](suitability.md)
 * Software
   * [Raspberry Pi Security](/docs/decurity.md)
   * [WiFi Configuration](/docs/wifi-cfg.md)
