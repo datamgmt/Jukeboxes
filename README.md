@@ -47,6 +47,7 @@ This project sets out to deliver the features described above. Making modificati
 * [New Equipment Dry-Run](/docs/dry-run.md)
 * [Modifying the audio channels](/docs/audio-mods.md)
 * [Modifying the control buttons](/docs/control-mods.md)
+* [Helpful Resources](/docs/helpful.md)
 
 ## Additional Resources
 
