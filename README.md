@@ -5,6 +5,18 @@
 > It is being documented as if finished but may be revised before the project is complete.
 > You are advised not to use this project until this warning is removed
 
+> [!WARNING]
+> Project abandoned (26 Oct 2025)
+> All the software etc worked and this project would function on another jukebox howver the one I have access to 
+> (a Rock-ola 459) has a need for an open and a closed relay which isn't easy to cirumvent.
+> Thanks to Joe @ Joe's Classic Video Games for his help in identifying this
+> "The problem you have is that there is a normally closed contact on each of the switches, if you don't physically
+> break the connection by pressing the button, the parallel button you put in place I don't believe will allow it to
+> operate correctly. I can't tell exactly what that other connection is doing, but if you follow the schematics it
+> goes around to another transistor. See schematic on page 20 of the Rock-ola manual"
+
+> If anyone is interested in attempting this with another Jukebox then please contact me directly
+
 ## Bringing Vintage Jukeboxes into the Streaming Age
 
 The classic jukebox—once the centerpiece of diners and bars across America during its 1950s heyday—has found new life as a striking statement piece in modern homes. These beautiful electro-mechanical marvels, with their chrome accents, colorful lighting, and satisfying mechanical selections, combine nostalgia with undeniable visual appeal. Whether it's a gleaming Wurlitzer or a sleek Seeburg, vintage jukeboxes capture an era when choosing music was a tactile, social experience.
